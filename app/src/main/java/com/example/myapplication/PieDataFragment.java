@@ -66,6 +66,10 @@ public class PieDataFragment extends Fragment {
         entries.add(entry2);
 
 
+
+        // cf broooooooooo
+
+
         PieDataSet pieSet = new PieDataSet(entries, "Your name here");
         pieSet.setColors(Color.rgb(38, 49, 69), Color.rgb(38, 66, 34));
         pieSet.setValueTextColor(Color.rgb(230, 230, 230));
