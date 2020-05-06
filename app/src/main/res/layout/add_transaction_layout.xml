@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/transaction_select_category"
+        android:layout_width="350dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="604dp"
+        android:hint="@string/select_category"
+        android:onClick="onSelectCategory"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/transaction_price"
+        android:layout_width="350dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="195dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="481dp"
+        android:autofillHints="price"
+        android:hint="@string/enter_price"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/transaction_date"
+        android:layout_width="350dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="141dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="555dp"
+        android:autofillHints="Select Date"
+        android:hint="@string/select_date"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/transaction_add_button"
+        android:layout_width="163dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="122dp"
+        android:layout_marginTop="479dp"
+        android:layout_marginEnd="126dp"
+        android:layout_marginBottom="204dp"
+        android:text="@string/add_transaction"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/transaction_notes"
+        android:layout_width="350dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="261dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="412dp"
+        android:gravity="start|top"
+        android:hint="@string/write_note"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
