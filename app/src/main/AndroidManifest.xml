@@ -21,6 +21,7 @@
         <activity android:name=".MainActivity">
 
         </activity>
+        <activity android:name=".RegisterActivity"/>
         <activity android:name=".AddTransactionActivity"/>
         <activity android:name=".SelectCategoryActivity"/>
     </application>
