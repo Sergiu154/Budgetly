@@ -8,6 +8,8 @@
         app:showAsAction="never"/>
  <item android:title="View by category"
      android:id="@+id/view_by_category"/>
+    <item android:title="Logout"
+        android:id="@+id/logout_main"/>
 
 
 </menu>

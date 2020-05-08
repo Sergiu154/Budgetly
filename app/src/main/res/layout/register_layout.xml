@@ -19,13 +19,13 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textInputEditText"
+        android:id="@+id/emailLogin"
         android:layout_width="260dp"
         android:layout_height="40dp"
         android:layout_marginBottom="12dp"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/passwordLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
@@ -38,7 +38,7 @@
         app:layout_constraintGuide_end="185dp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/passwordLogin"
         android:layout_width="260dp"
         android:layout_height="40dp"
         android:layout_marginBottom="28dp"

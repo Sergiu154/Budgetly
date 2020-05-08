@@ -17,8 +17,11 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             startActivity(intent);
                             break;
                     }
-                    if(selectedFragment != null)
+                    if (selectedFragment != null)
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
                     return true;
@@ -107,11 +110,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             case R.id.view_by_category:
                 Toast.makeText(this, "Category", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.logout_main:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                return true;
             default:
                 return true;
         }
 
     }
-
 
 }
