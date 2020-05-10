@@ -59,6 +59,10 @@ public class TransactionFragment extends Fragment {
         }
     }
 
+
+    // doar temporar aici
+    private List<TransactionDetails> names = new ArrayList<>();
+
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,14 +78,14 @@ public class TransactionFragment extends Fragment {
         String month = args.getString("month");
         String year = args.getString("year");
         names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
+        names.add(new TransactionDetails(12, "Monday", month, year, "Food", R.drawable.icons8_restaurant_100, 100.4f));
+        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 10.4f));
         names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
         names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
         names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
+        names.add(new TransactionDetails(12, "Monday", month, year, "Car Repair", R.drawable.icons8_restaurant_100, 500f));
         names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
+        names.add(new TransactionDetails(12, "Monday", month, year, "Food", R.drawable.icons8_restaurant_100, 50f));
         names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity());
@@ -92,6 +96,11 @@ public class TransactionFragment extends Fragment {
 
 
         return view;
-
     }
+
+
+    public List<TransactionDetails> getNames() {
+        return names;
+    }
+
 }

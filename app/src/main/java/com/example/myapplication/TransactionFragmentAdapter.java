@@ -29,6 +29,7 @@ public class TransactionFragmentAdapter extends FragmentStatePagerAdapter {
         this.tabTitles = tabTitles;
         this.months = new HashMap<>();
         this.isChart = isChart;
+
         String[] mnths = {"Jan","Feb","March","April","May","June","July","August","Sept","Oct","Nov","Dec"};
         for(int i = 0; i< 12;i++) {
             if (i < 10){
