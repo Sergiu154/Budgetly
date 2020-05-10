@@ -9,7 +9,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
@@ -33,8 +32,6 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         startActivity(intent);
 
     }
-
-
 
     /* date selection and display in transactions */
 
