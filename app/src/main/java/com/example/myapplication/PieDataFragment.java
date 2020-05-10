@@ -103,8 +103,6 @@ public class PieDataFragment extends Fragment {
 
         Float total_spend = 0f;
 
-
-
         for (int i = 0; i < names.size(); ++i) {
             TransactionDetails temp = names.get(i);
             total_spend += (float) temp.getAmount();
@@ -126,7 +124,7 @@ public class PieDataFragment extends Fragment {
         }
 
 
-        List<Integer> ordered_color_list = new LinkedList<>(ordered_color_set);
+        LinkedList<Integer> ordered_color_list = new LinkedList<>(ordered_color_set);
 
 
         // AICI ESTE PT PIE_CHART
@@ -135,7 +133,7 @@ public class PieDataFragment extends Fragment {
         Set<String> keys = chart_data.keySet();
         for(String key : keys) {
             float value = chart_data.get(key);
-            PieEntry entry = new PieEntry(value, ordered_color_list.size());
+            PieEntry entry = new PieEntry(value, key);
 
             entries.add(entry);
         }
@@ -143,6 +141,7 @@ public class PieDataFragment extends Fragment {
         PieDataSet pieSet = new PieDataSet(entries, "Your name here");
 
         pieSet.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"));
+        // pieSet.setColors(ordered_color_list);
         pieSet.setValueTextColor(Color.rgb(230, 230, 230));
         pieSet.setValueTextSize(20f);
 
@@ -150,7 +149,7 @@ public class PieDataFragment extends Fragment {
         graficuMen.setData(data);
 
         // graficuMen.setBackgroundColor(Color.parseColor("#e0e0eb"));
-        graficuMen.setCenterText("" + ordered_color_set.size());
+        graficuMen.setCenterText("Cheltuieli totale\n" + total_spend.intValue() + " lei");
         graficuMen.setCenterTextColor(Color.rgb(246, 55, 109));
         graficuMen.setCenterTextSize(20f);
         graficuMen.setTouchEnabled(false);
@@ -165,22 +164,22 @@ public class PieDataFragment extends Fragment {
 
         // AICI ESTE PT BAR_CHART
 
-//        List<BarEntry> bar_entries = new ArrayList<>();
-//
-//        float poz = 0f;
-//        for(String key : keys) {
-//            float value = chart_data.get(key);
-//            BarEntry entry = new BarEntry(value, poz);
-//            poz += 1f;
-//            bar_entries.add(entry);
-//        }
-//        BarDataSet set = new BarDataSet(bar_entries, "BarDataSet");
-//        BarData bar_data = new BarData(set);
-//
-//        bar_data.setBarWidth(0.9f);
-//        liniileMen.setData(bar_data);
-//        liniileMen.setFitBars(true);
-//        liniileMen.invalidate();
+        List<BarEntry> bar_entries = new ArrayList<>();
+
+        float poz = 0f;
+        for(String key : keys) {
+            float value = chart_data.get(key);
+            BarEntry entry = new BarEntry(value, poz);
+            poz += 1f;
+            bar_entries.add(entry);
+        }
+        BarDataSet set = new BarDataSet(bar_entries, "BarDataSet");
+        BarData bar_data = new BarData(set);
+
+        bar_data.setBarWidth(0.9f);
+        liniileMen.setData(bar_data);
+        liniileMen.setFitBars(true);
+        liniileMen.invalidate();
 
 
         return view;
