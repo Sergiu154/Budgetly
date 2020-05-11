@@ -4,18 +4,38 @@ package com.example.myapplication;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class AddTransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    private static final String TAG = "AddTransactionActivity";
     private TextView dateText;
+    private String month;
+    private String year;
+    private int day;
+    private String stringDay;
+    private EditText transactionNotes;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String monthCollection;
+    CollectionReference collectionReference = db.collection("users");
 
     /* main function */
     @Override
@@ -60,23 +80,49 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         month = month + 1;
-        String date = month + "/" + dayOfMonth + "/" + year;
+        String date = month + "-" + dayOfMonth + "-" + year;
+        this.day = dayOfMonth;
+        this.stringDay = String.valueOf(dayOfMonth);
+        this.year = String.valueOf(year);
+        this.month = String.valueOf(month);
+        monthCollection = month + "-" + year;
         dateText.setText(date);
     }
     /* end of date selection and display */
 
     /* button for adding transaction */
     public void addTransactionButtonClick(View v) {
+
+        transactionNotes = findViewById(R.id.transaction_notes);
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        EditText transactionPrice = findViewById(R.id.transaction_price);
+
+
         if (dateText.getText().toString().matches("")) {
-            Toast.makeText(AddTransactionActivity.this, "Select the date!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(AddTransactionActivity.this, transactionPrice.getText().toString(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(AddTransactionActivity.this, transactionNotes.getText().toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddTransactionActivity.this, monthCollection, Toast.LENGTH_SHORT).show();
+
             return;
         }
 
-        EditText transactionPrice = findViewById(R.id.transaction_price);
         if (transactionPrice.getText().toString().matches("")) {
+            Toast.makeText(AddTransactionActivity.this, monthCollection, Toast.LENGTH_SHORT).show();
             Toast.makeText(AddTransactionActivity.this, "Insert a price!", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
+        // adaugam tranzactia la luna respectiva in colectia userului
+
+        Map<String, String> transaction = new HashMap<>();
+        transaction.put("date", dateText.getText().toString());
+        transaction.put("price", transactionPrice.getText().toString());
+        transaction.put("notes", transactionNotes.getText().toString());
+        TransactionDetails transactionDetails = new TransactionDetails(this.day, this.stringDay, this.month, this.year, "cat", 0, Double.parseDouble(transactionPrice.getText().toString()));
+        DocumentReference ref = collectionReference
+                .document(firebaseAuth.getCurrentUser().getUid()).collection(monthCollection).document("transaction").collection(dateText.getText().toString()).document();
+        ref.set(transactionDetails);
 
         // TODO: de verificat si daca s-a ales o categorie ---- am nevoie de o functie ce primeste categoria
         // TODO: de executat ce trebuie facut cu butonul ---- am nevoie sa stiu ce trebuie returnat si tipul returnat (probabil o sa fie un sir de string-uri)
