@@ -10,8 +10,10 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import java.util.List;
 
 public class ElementAdapter extends ExpandableRecyclerViewAdapter<CategoryViewHolder, ElementViewHolder> {
-    public ElementAdapter(List<? extends ExpandableGroup> groups) {
+    private RecyclerViewClickListener mListener;
+    public ElementAdapter(List<? extends ExpandableGroup> groups, RecyclerViewClickListener listener) {
         super(groups);
+        mListener = listener;
     }
 
     @Override
@@ -23,13 +25,13 @@ public class ElementAdapter extends ExpandableRecyclerViewAdapter<CategoryViewHo
     @Override
     public ElementViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.expandable_recyclerview_element, parent, false);
-        return new ElementViewHolder(v);
+        return new ElementViewHolder(v,mListener);
     }
 
     @Override
     public void onBindChildViewHolder(ElementViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
         final Element element = (Element) group.getItems().get(childIndex);
-        holder.bind(element);
+        holder.bind(element,element.getName(),element.getImgSrc());
     }
 
     @Override
