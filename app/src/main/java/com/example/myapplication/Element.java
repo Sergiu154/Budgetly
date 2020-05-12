@@ -16,6 +16,10 @@ public class Element implements Parcelable {
         return imgSrc;
     }
 
+    public String getName() {
+        return name;
+    }
+
     protected Element(Parcel in) {
         name = in.readString();
     }
