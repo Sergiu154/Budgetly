@@ -1,12 +1,12 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.ArrayList;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +26,7 @@ public class ExpenseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.expense_fragment_layout, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         ArrayList<Category> categories = new ArrayList<>();
@@ -113,7 +113,17 @@ public class ExpenseFragment extends Fragment {
 
         categ = new Category("Other", element, R.drawable.other);
         categories.add(categ);
-        ElementAdapter adapter = new ElementAdapter(categories);
+        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, String category, int src) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, AddTransactionActivity.class);
+                intent.putExtra("image_url", src);
+                intent.putExtra("image_name", category);
+                context.startActivity(intent);
+            }
+        };
+        ElementAdapter adapter = new ElementAdapter(categories,listener);
         recyclerView.setAdapter(adapter);
         return view;
     }

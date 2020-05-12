@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,7 @@ public class IncomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         ArrayList<Category> categories = new ArrayList<>();
-        ArrayList<Element> element = new ArrayList<>();
+        final ArrayList<Element> element = new ArrayList<>();
         element.add(new Element("Award", R.drawable.award));
         element.add(new Element("Interest Money", R.drawable.interest));
         element.add(new Element("Salary", R.drawable.salary));
@@ -43,7 +45,17 @@ public class IncomeFragment extends Fragment {
         Category categ = new Category("Income", element, R.drawable.income);
         categories.add(categ);
 
-        ElementAdapter adapter = new ElementAdapter(categories);
+        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, String category, int src) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, AddTransactionActivity.class);
+                intent.putExtra("image_url", src);
+                intent.putExtra("image_name",category);
+                context.startActivity(intent);
+            }
+        };
+        ElementAdapter adapter = new ElementAdapter(categories,listener);
         recyclerView.setAdapter(adapter);
         return view;
     }

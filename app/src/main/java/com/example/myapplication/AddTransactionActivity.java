@@ -36,13 +36,38 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String monthCollection;
     CollectionReference collectionReference = db.collection("users");
+    private TextView CategoryText;
+    private int imgSrc;
 
     /* main function */
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_transaction_layout);
         setTransactionDate();
+        String newString;
+        int src;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null) {
+                newString = null;
+                src = 0;
+            } else {
+                newString = extras.getString("image_name");
+                src = extras.getInt("image_url");
+            }
+        } else {
+            newString = (String) savedInstanceState.getSerializable("image_name");
+            src = savedInstanceState.getInt("image_url");
+        }
+        setCategory(newString, src);
+    }
+
+    private void setCategory(String s, int src) {
+        CategoryText = findViewById(R.id.transaction_select_category);
+        CategoryText.setText(s);
+        imgSrc = src;
     }
     /* end of main function */
 
@@ -127,6 +152,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         startActivity(new Intent(AddTransactionActivity.this, MainActivity.class));
 
         // TODO: de verificat si daca s-a ales o categorie ---- am nevoie de o functie ce primeste categoria
+
         // TODO: de executat ce trebuie facut cu butonul ---- am nevoie sa stiu ce trebuie returnat si tipul returnat (probabil o sa fie un sir de string-uri)
     }
     /* end of button for adding transaction */

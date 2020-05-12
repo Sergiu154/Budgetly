@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +22,6 @@ public class DebtFragment extends Fragment {
     public DebtFragment() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -32,20 +32,35 @@ public class DebtFragment extends Fragment {
 
 
         ArrayList<Category> categories = new ArrayList<>();
-        ArrayList<Element> element = new ArrayList<>();
+        final ArrayList<Element> element = new ArrayList<>();
+        final ArrayList<Element> element1 = new ArrayList<>();
         element.add(new Element("Debt", R.drawable.debt));
         element.add(new Element("Debt Collection", R.drawable.debtcollect));
 
+        element1.add(new Element("Debt", R.drawable.debt));
+        element1.add(new Element("Debt Collection", R.drawable.debtcollect));
         Category categ = new Category("Debt", element, R.drawable.debt);
         categories.add(categ);
 
-        ArrayList<Element> elements = new ArrayList<>();
+        final ArrayList<Element> elements = new ArrayList<>();
         elements.add(new Element("Loan", R.drawable.loan));
         elements.add(new Element("Repayment", R.drawable.repayment));
+        element1.add(new Element("Loan", R.drawable.loan));
+        element1.add(new Element("Repayment", R.drawable.repayment));
         categ = new Category("Other", elements, R.drawable.other);
         categories.add(categ);
 
-        ElementAdapter adapter = new ElementAdapter(categories);
+        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, String category, int src) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, AddTransactionActivity.class);
+                intent.putExtra("image_url", src);
+                intent.putExtra("image_name", category);
+                context.startActivity(intent);
+            }
+        };
+        ElementAdapter adapter = new ElementAdapter(categories,listener);
         recyclerView.setAdapter(adapter);
         return view;
     }
