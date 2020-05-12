@@ -121,8 +121,10 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         transaction.put("notes", transactionNotes.getText().toString());
         TransactionDetails transactionDetails = new TransactionDetails(this.day, this.stringDay, this.month, this.year, "cat", 0, Double.parseDouble(transactionPrice.getText().toString()));
         DocumentReference ref = collectionReference
-                .document(firebaseAuth.getCurrentUser().getUid()).collection(monthCollection).document("transaction").collection(dateText.getText().toString()).document();
+                .document(firebaseAuth.getCurrentUser().getUid()).collection(monthCollection).document();
         ref.set(transactionDetails);
+
+        startActivity(new Intent(AddTransactionActivity.this, MainActivity.class));
 
         // TODO: de verificat si daca s-a ales o categorie ---- am nevoie de o functie ce primeste categoria
         // TODO: de executat ce trebuie facut cu butonul ---- am nevoie sa stiu ce trebuie returnat si tipul returnat (probabil o sa fie un sir de string-uri)
