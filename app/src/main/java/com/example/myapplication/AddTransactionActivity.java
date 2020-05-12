@@ -116,7 +116,6 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
                 months.put(Integer.toString(i), mnths[i]);
             }
         }
-        month = month + 1;
         String date = month + "-" + dayOfMonth + "-" + year;
         this.day = dayOfMonth;
         this.stringDay = String.valueOf(dayOfMonth);
