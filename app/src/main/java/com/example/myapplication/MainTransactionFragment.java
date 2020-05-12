@@ -98,7 +98,7 @@ public class MainTransactionFragment extends Fragment {
 
         // set the adapter for the viewPager
         viewPager.setAdapter(new TransactionFragmentAdapter(getChildFragmentManager(), getContext(), tabTitles, isChart));
-        viewPager.getAdapter().notifyDataSetChanged();
+//        viewPager.getAdapter().notifyDataSetChanged();
 
         // get the tabLayout and bind it with the viewPager
         tabLayout.setupWithViewPager(viewPager);
