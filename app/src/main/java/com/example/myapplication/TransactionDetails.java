@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
-public class TransactionDetails {
+import java.util.Comparator;
+
+public class TransactionDetails implements Comparable<TransactionDetails> {
 
     private int day;
     private String stringDay;
@@ -23,7 +25,7 @@ public class TransactionDetails {
         this.stringDay = stringDay;
     }
 
-    public TransactionDetails(int day, String stringDay, String month, String year, String category,int categoryPath, double amount) {
+    public TransactionDetails(int day, String stringDay, String month, String year, String category, int categoryPath, double amount) {
         this.day = day;
         this.stringDay = stringDay;
         this.month = month;
@@ -80,5 +82,10 @@ public class TransactionDetails {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public int compareTo(TransactionDetails o) {
+        return day - o.getDay();
     }
 }

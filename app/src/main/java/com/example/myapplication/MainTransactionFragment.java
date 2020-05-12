@@ -31,12 +31,13 @@ public class MainTransactionFragment extends Fragment {
     TabLayout tabLayout;
     View view;
     private Boolean isChart;
-//
+
+    //
 //    public MainTransactionFragment(Boolean isChart) {
 //
 //        this.isChart = isChart;
 //    }
-    public  MainTransactionFragment(){
+    public MainTransactionFragment() {
 
 
     }
@@ -45,7 +46,7 @@ public class MainTransactionFragment extends Fragment {
 
         Bundle args = new Bundle();
         MainTransactionFragment fragment = null;
-        args.putBoolean("isChart",isChart);
+        args.putBoolean("isChart", isChart);
         fragment = new MainTransactionFragment();
         fragment.setArguments(args);
         return fragment;
@@ -97,6 +98,7 @@ public class MainTransactionFragment extends Fragment {
 
         // set the adapter for the viewPager
         viewPager.setAdapter(new TransactionFragmentAdapter(getChildFragmentManager(), getContext(), tabTitles, isChart));
+        viewPager.getAdapter().notifyDataSetChanged();
 
         // get the tabLayout and bind it with the viewPager
         tabLayout.setupWithViewPager(viewPager);
