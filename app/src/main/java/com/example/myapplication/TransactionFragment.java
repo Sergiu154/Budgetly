@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -82,8 +83,10 @@ public class TransactionFragment extends Fragment {
 
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        if (isVisibleToUser) {
+        //This means this fragment is visible to user so you can write code to refresh the fragment here by reloaded the data.
+
         Bundle args = this.getArguments();
 
         // get the date passed to the bundle at newInstance
@@ -105,13 +108,15 @@ public class TransactionFragment extends Fragment {
                         TransactionDetails message = doc.toObject(TransactionDetails.class);
                         names.add(message);
                     }
+                    Collections.sort(names);
                     recylerViewAdapter.notifyDataSetChanged();
-                    setData(getView());
                 }
             }
         });
 
+//        }
     }
+
 
     // doar temporar aici
 //    private List<TransactionDetails> names = new ArrayList<>();
@@ -142,6 +147,7 @@ public class TransactionFragment extends Fragment {
                     names.add(documentSnapshots.toObject(TransactionDetails.class));
 
                 }
+                Collections.sort(names);
                 recylerViewAdapter.notifyDataSetChanged();
                 setData(view);
 

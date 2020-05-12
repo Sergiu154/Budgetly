@@ -44,7 +44,15 @@ public class TransactionFragmentAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        // POSITION_NONE makes it possible to reload the PagerAdapter
+        return POSITION_NONE;
+    }
+
+    @Override
     public Fragment getItem(int position) {
+
+
         // get the current month
         String[] temp = this.tabTitles.get(position).split("/");
 //        temp[0] = this.months.get(temp[0]);

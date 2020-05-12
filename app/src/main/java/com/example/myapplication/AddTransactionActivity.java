@@ -37,6 +37,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     private String monthCollection;
     CollectionReference collectionReference = db.collection("users");
     private TextView CategoryText;
+    private String categoryName;
     private int imgSrc;
 
     /* main function */
@@ -67,6 +68,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     private void setCategory(String s, int src) {
         CategoryText = findViewById(R.id.transaction_select_category);
         CategoryText.setText(s);
+        categoryName = s;
         imgSrc = src;
     }
     /* end of main function */
@@ -104,12 +106,22 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        HashMap<String, String> months = new HashMap<>();
+        String[] mnths = {"Jan", "Feb", "March", "April", "May", "June", "July", "August", "Sept", "Oct", "Nov", "Dec"};
+        for (int i = 0; i < 12; i++) {
+            if (i < 10) {
+                months.put(Integer.toString(i), mnths[i]);
+            } else {
+
+                months.put(Integer.toString(i), mnths[i]);
+            }
+        }
         month = month + 1;
         String date = month + "-" + dayOfMonth + "-" + year;
         this.day = dayOfMonth;
         this.stringDay = String.valueOf(dayOfMonth);
         this.year = String.valueOf(year);
-        this.month = String.valueOf(month);
+        this.month = months.get(String.valueOf(month));
         monthCollection = month + "-" + year;
         dateText.setText(date);
     }
@@ -144,7 +156,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         transaction.put("date", dateText.getText().toString());
         transaction.put("price", transactionPrice.getText().toString());
         transaction.put("notes", transactionNotes.getText().toString());
-        TransactionDetails transactionDetails = new TransactionDetails(this.day, this.stringDay, this.month, this.year, "cat", 0, Double.parseDouble(transactionPrice.getText().toString()));
+        TransactionDetails transactionDetails = new TransactionDetails(this.day, this.stringDay, this.month, this.year, categoryName, imgSrc, Double.parseDouble(transactionPrice.getText().toString()));
         DocumentReference ref = collectionReference
                 .document(firebaseAuth.getCurrentUser().getUid()).collection(monthCollection).document();
         ref.set(transactionDetails);
