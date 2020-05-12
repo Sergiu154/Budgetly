@@ -107,8 +107,8 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         HashMap<String, String> months = new HashMap<>();
-        String[] mnths = {"Jan", "Feb", "March", "April", "May", "June", "July", "August", "Sept", "Oct", "Nov", "Dec"};
-        for (int i = 0; i < 12; i++) {
+        String[] mnths = {"", "Jan", "Feb", "March", "April", "May", "June", "July", "August", "Sept", "Oct", "Nov", "Dec"};
+        for (int i = 1; i <= 12; i++) {
             if (i < 10) {
                 months.put(Integer.toString(i), mnths[i]);
             } else {
@@ -116,6 +116,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
                 months.put(Integer.toString(i), mnths[i]);
             }
         }
+        month = month + 1;
         String date = month + "-" + dayOfMonth + "-" + year;
         this.day = dayOfMonth;
         this.stringDay = String.valueOf(dayOfMonth);
