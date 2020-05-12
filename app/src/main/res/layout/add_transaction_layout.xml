@@ -4,87 +4,192 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-
-    <TextView
-        android:id="@+id/transaction_select_category"
-        android:layout_width="350dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="85dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="604dp"
-        android:hint="@string/select_category"
-        android:onClick="onSelectCategory"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/transaction_price"
-        android:layout_width="350dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="195dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="481dp"
-        android:autofillHints="price"
-        android:hint="@string/enter_price"
-        android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/transaction_date"
-        android:layout_width="350dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="141dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="555dp"
-        android:autofillHints="Select Date"
-        android:hint="@string/select_date"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="#f0f0f0"
+    tools:context=".AddTransactionActivity">
 
     <Button
         android:id="@+id/transaction_add_button"
-        android:layout_width="163dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="122dp"
-        android:layout_marginTop="479dp"
-        android:layout_marginEnd="126dp"
-        android:layout_marginBottom="204dp"
+        android:layout_width="203dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="610dp"
+        android:layout_marginBottom="56dp"
+        android:elevation="0dp"
+        android:onClick="addTransactionButtonClick"
         android:text="@string/add_transaction"
+        android:textAllCaps="false"
+        app:cornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/transaction_notes"
-        android:layout_width="350dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="261dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="412dp"
-        android:gravity="start|top"
-        android:hint="@string/write_note"
-        android:importantForAutofill="no"
-        android:inputType="text"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="414dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="659dp"
+        android:background="#ffffff"
+        android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/pop_up_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="339dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="23dp"
+            android:contentDescription="@string/popup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+        <TextView
+            android:id="@+id/addTransactionTitle"
+            android:layout_width="152dp"
+            android:layout_height="29dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="220dp"
+            android:layout_marginBottom="19dp"
+            android:text="@string/add_transaction"
+            android:textColor="@color/colorAccent"
+            android:textSize="19sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="414dp"
+        android:layout_height="471dp"
+        android:layout_marginTop="111dp"
+        android:layout_marginBottom="149dp"
+        android:background="#ffffff"
+        android:elevation="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/transaction_select_category"
+            android:layout_width="321dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="84dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginBottom="324dp"
+            android:elevation="1dp"
+            android:hint="@string/select_category"
+            android:onClick="onSelectCategory"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/transaction_price"
+            android:layout_width="325dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="194dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="194dp"
+            android:autofillHints="price"
+            android:hint="@string/enter_price"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/transaction_notes"
+            android:layout_width="321dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="345dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginBottom="50dp"
+            android:gravity="start|top"
+            android:hint="@string/write_note"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/transaction_date"
+            android:layout_width="321dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="143dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginBottom="266dp"
+            android:autofillHints="Select Date"
+            android:hint="@string/select_date"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.107" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="248dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="74dp"
+            android:layout_marginEnd="74dp"
+            android:layout_marginBottom="410dp"
+            android:elevation="2dp"
+            android:text="@string/transaction_details"
+            android:textColor="#4c4c4c"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title2"
+            android:layout_width="125dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="118dp"
+            android:layout_marginTop="308dp"
+            android:layout_marginEnd="118dp"
+            android:layout_marginBottom="108dp"
+            android:elevation="2dp"
+            android:text="@string/additional_data"
+            android:textColor="#4c4c4c"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

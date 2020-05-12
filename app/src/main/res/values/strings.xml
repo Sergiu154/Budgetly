@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Budgetly</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -13,4 +13,7 @@
     <string name="tab_text1">DEBT &amp; LOAN</string>
     <string name="tab_text2">EXPENSE</string>
     <string name="tab_text3">INCOME</string>
+    <string name="transaction_details">Transaction Details</string>
+    <string name="additional_data">Additional data</string>
+    <string name="popup">popup</string>
 </resources>
