@@ -127,7 +127,6 @@ public class TransactionFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_transaction, container, false);
 
-
         // here we will get the transactions of the current month
         // and pass that list to the recyclerView adapter
         Bundle args = this.getArguments();
@@ -150,7 +149,6 @@ public class TransactionFragment extends Fragment {
                 Collections.sort(names);
                 recylerViewAdapter.notifyDataSetChanged();
                 setData(view);
-
             }
         });
 

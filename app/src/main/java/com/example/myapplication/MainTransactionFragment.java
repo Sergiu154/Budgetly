@@ -38,8 +38,6 @@ public class MainTransactionFragment extends Fragment {
 //        this.isChart = isChart;
 //    }
     public MainTransactionFragment() {
-
-
     }
 
     public static MainTransactionFragment newInstance(Boolean isChart) {

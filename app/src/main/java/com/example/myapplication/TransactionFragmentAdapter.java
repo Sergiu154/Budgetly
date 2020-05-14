@@ -64,7 +64,7 @@ public class TransactionFragmentAdapter extends FragmentStatePagerAdapter {
         // anul
         tmp.add(temp[1]);
         if (isChart)
-            return PieDataFragment.newInstance();
+            return PieDataFragment.newInstance(position, tmp);
         else
             return TransactionFragment.newInstance(position + 1, tmp);
     }
