@@ -12,6 +12,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +27,8 @@ public class RegisterActivity extends AppCompatActivity {
     TextInputEditText mEmail;
     EditText mPassword;
     FirebaseAuth firebaseAuth;
+    private CollectionReference db = FirebaseFirestore.getInstance().collection("users");
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +82,11 @@ public class RegisterActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
 
                     Toast.makeText(RegisterActivity.this, "User created", Toast.LENGTH_SHORT).show();
+
+                    Map<String, Object> amount = new HashMap<>();
+                    amount.put("amount", 0.0);
+                    db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").set(amount);
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();

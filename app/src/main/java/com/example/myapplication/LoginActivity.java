@@ -24,7 +24,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.LoggingMXBean;
 
 import androidx.annotation.NonNull;
@@ -41,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private SignInButton signInBtn;
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient googleSignInClient;
+    private CollectionReference db = FirebaseFirestore.getInstance().collection("users");
 
 
     @Override
@@ -165,6 +170,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+
+//                    manageWallet();
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -182,7 +190,16 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public void manageWallet()
+    {
+        Map<String, Object> amount = new HashMap<>();
+        amount.put("amount", 0.0);
+        db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").set(amount);
+
+    }
+
     public void onRegister(View view) {
+
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
         finish();
