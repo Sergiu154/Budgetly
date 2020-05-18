@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.os.Bundle;
 import android.text.BoringLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,15 +10,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +39,11 @@ public class MainTransactionFragment extends Fragment {
     ViewPager viewPager;
     TabLayout tabLayout;
     View view;
+    TextView totalAmount;
     private Boolean isChart;
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private CollectionReference db = FirebaseFirestore.getInstance().collection("users");
+
 
     //
 //    public MainTransactionFragment(Boolean isChart) {
@@ -56,6 +69,26 @@ public class MainTransactionFragment extends Fragment {
         view = inflater.inflate(R.layout.main_transaction_layout, container, false);
         viewPager = view.findViewById(R.id.viewpager);
         tabLayout = view.findViewById(R.id.sliding_tabs);
+        totalAmount = view.findViewById(R.id.totalAmount_id);
+
+        db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            private static final String TAG = "MAIN_TRANSACTION";
+
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        totalAmount.setText(Objects.requireNonNull(document.getData().get("amount")).toString() + " lei");
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
         return view;
     }
 

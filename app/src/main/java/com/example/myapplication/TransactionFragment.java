@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +47,7 @@ public class TransactionFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private int mPage;
-
+    private double totalSum;
     private CollectionReference db = FirebaseFirestore.getInstance().collection("users");
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
@@ -127,6 +130,12 @@ public class TransactionFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_transaction, container, false);
 
+
+        final TextView inflow = view.findViewById(R.id.inflow_id);
+        final TextView outflow = view.findViewById(R.id.outflow_id);
+        final TextView finalSum = view.findViewById(R.id.finalSum);
+
+
         // here we will get the transactions of the current month
         // and pass that list to the recyclerView adapter
         Bundle args = this.getArguments();
@@ -147,22 +156,16 @@ public class TransactionFragment extends Fragment {
 
                 }
                 Collections.sort(names);
+                Double[] inOut = getInflowOutFlow(names);
+                inflow.setText(inOut[1].toString());
+                outflow.setText(inOut[0].toString());
+                Double tmp = inOut[1] - inOut[0];
+                finalSum.setText(tmp.toString());
                 recylerViewAdapter.notifyDataSetChanged();
                 setData(view);
             }
         });
 
-
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Food", R.drawable.icons8_restaurant_100, 100.4f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 10.4f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Car Repair", R.drawable.icons8_restaurant_100, 500f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Food", R.drawable.icons8_restaurant_100, 50f));
-//        names.add(new TransactionDetails(12, "Monday", month, year, "Sport", R.drawable.icons8_restaurant_100, 124.4f));
 
         setData(view);
         return view;
@@ -173,8 +176,34 @@ public class TransactionFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.my_recycler_view);
         recyclerView.setLayoutManager(layoutManager);
         this.recylerViewAdapter = new RecylerViewAdapter(names, this.getActivity());
+        this.recylerViewAdapter.setOnItemClickListener(new RecylerViewAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String transactionId = names.get(position).getTransactionId();
+                Toast.makeText(getActivity(), transactionId, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), EditTransaction.class);
+                intent.putExtra("id", transactionId);
+                startActivity(intent);
+
+            }
+        });
         recyclerView.setAdapter(recylerViewAdapter);
 
+    }
+
+    public Double[] getInflowOutFlow(List<TransactionDetails> trans) {
+
+        Double[] inOut = {0.0, 0.0};
+        for (TransactionDetails t : trans) {
+
+            if (t.getAmount() < 0)
+                inOut[0] -= t.getAmount();
+            else
+                inOut[1] += t.getAmount();
+        }
+
+
+        return inOut;
     }
 
 

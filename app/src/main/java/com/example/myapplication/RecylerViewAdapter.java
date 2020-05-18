@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +23,12 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
     // data will be
     private List<TransactionDetails> currentMonthTransactions;
     private Context context;
+
+    public void setOnItemClickListener(RecylerViewAdapter.onItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    private onItemClickListener onItemClickListener;
 
     public RecylerViewAdapter(List<TransactionDetails> currentMonthTransactions, Context context) {
         this.currentMonthTransactions = currentMonthTransactions;
@@ -41,9 +49,12 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
         holder.intDay.setText(String.valueOf(transactionDetails.getDay()));
         holder.stringDay.setText(transactionDetails.getStringDay());
         holder.category.setText(transactionDetails.getCategory());
-        holder.amount.setText(String.format("%.1f", -transactionDetails.getAmount()));
+        holder.amount.setText(String.format("%.1f", transactionDetails.getAmount()));
+        if(transactionDetails.getAmount() > 0)
+            holder.amount.setTextColor(Color.GREEN);
         holder.monthYear.setText(transactionDetails.getMonth() + " " + transactionDetails.getYear());
         holder.categoryPhoto.setImageResource(transactionDetails.getCategoryPath());
+        holder.transactionId.setText(transactionDetails.getTransactionId());
 
 
     }
@@ -59,6 +70,7 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
         TextView stringDay;
         TextView monthYear;
         TextView amount;
+        TextView transactionId;
         TextView category;
         ImageView categoryPhoto;
         ConstraintLayout relativeLayout;
@@ -73,6 +85,30 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
             monthYear = itemView.findViewById(R.id.monthYear);
             relativeLayout = itemView.findViewById(R.id.relative_layout);
             categoryPhoto = itemView.findViewById(R.id.catergoryPhoto);
+            transactionId = itemView.findViewById(R.id.transcation_id);
+            transactionId.setVisibility(View.INVISIBLE);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (onItemClickListener != null) {
+
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+
+                            onItemClickListener.onItemClick(position);
+                        }
+                    }
+
+                }
+            });
         }
     }
+
+    public interface onItemClickListener {
+        void onItemClick(int position);
+
+    }
+
 }
