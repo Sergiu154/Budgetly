@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,8 +84,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
 
     private void setCategory(String s, int src) {
         CategoryText = findViewById(R.id.transaction_select_category);
+        ImageView categoryImage = findViewById(R.id.add_category_photo);
         CategoryText.setText(s);
         categoryName = s;
+        categoryImage.setImageResource(src);
+        categoryImage.setTag(src);
         imgSrc = src;
     }
     /* end of main function */
@@ -92,6 +96,8 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     public void onSelectCategory(View view) {
 
         Intent intent = new Intent(this, SelectCategoryActivity.class);
+        intent.putExtra("whichActivity", 0);
+
         startActivity(intent);
 
     }
