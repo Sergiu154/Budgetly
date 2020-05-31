@@ -53,6 +53,8 @@ public class TransactionFragment extends Fragment {
 
     private final List<TransactionDetails> names = new ArrayList<>();
     private RecylerViewAdapter recylerViewAdapter;
+    private String numMonth;
+
 
 
     public TransactionFragment() {
@@ -95,7 +97,7 @@ public class TransactionFragment extends Fragment {
         // get the date passed to the bundle at newInstance
         String month = args.getString("month");
         String year = args.getString("year");
-        String numMonth = args.getString("numMonth").replaceFirst("^0+(?!$)", "");
+        numMonth = args.getString("numMonth").replaceFirst("^0+(?!$)", "");
 
         db = db.document(firebaseAuth.getCurrentUser().getUid()).collection(numMonth + '-' + year);
         db.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -179,10 +181,14 @@ public class TransactionFragment extends Fragment {
         this.recylerViewAdapter.setOnItemClickListener(new RecylerViewAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
+
                 String transactionId = names.get(position).getTransactionId();
-                Toast.makeText(getActivity(), transactionId, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), numMonth +  '-' +  names.get(position).getYear(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), EditTransaction.class);
                 intent.putExtra("id", transactionId);
+                intent.putExtra("transactionDate",numMonth +  '-' +  names.get(position).getYear());
+                intent.putExtra("isQueried",false);
+
                 startActivity(intent);
 
             }
