@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:textAlignment="center"
     tools:context=".AccountFragment">
 
     <ImageView
@@ -22,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="@string/user_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#050505"
+        android:textColor="@color/colorAccent"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,9 +34,8 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="@string/email"
-        android:textColor="#040303"
+        android:textColor="@color/emailColor"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,20 +43,64 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signOutBut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
+        android:layout_width="130dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="36dp"
         android:text="Log Out"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView5" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="470dp"
-        android:layout_height="534dp"
-        android:layout_marginTop="24dp"
+    <Button
+        android:id="@+id/darkModeButton"
+        android:layout_width="130dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:text="Dark Mode"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signOutBut" />
+
+    <Button
+        android:id="@+id/lightModeButton"
+        android:layout_width="130dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:text="Light Mode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/darkModeButton" />
+
+    <Button
+        android:id="@+id/aboutButton"
+        android:layout_width="130dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:text="About"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lightModeButton" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="300dp"
+        android:layout_height="155dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:text="Budgetly is a smart, easy-to-use app that allows you to track and categorize your in-and-out money, create budgets that you can actually stick to. It takes seconds to record daily transactions in clear and visualized categories such as Expense, Income or Debt. Easy-to-read graphs give you a clear view on your spending patterns. You can track your monthly income and transactions in just a few steps. "
+        android:textAlignment="inherit"
+        android:textColor="@color/colorAccent"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/aboutButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
