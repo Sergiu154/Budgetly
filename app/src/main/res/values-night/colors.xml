@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#044343</color>
+    <color name="colorPrimaryDark">#222222</color>
+    <color name="colorAccent">#FBFBFB</color>
+    <color name="textColor">#FBFBFB</color>
+    <color name="emailColor">#FBFBFB</color>
+    <color name="textHint">#FBFBFB</color>
+    <color name="transactionColor">#044343</color>
+    <color name="backgroundTransaction">#222222</color>
+    <color name="backgroundPie">#222222</color>
+    <color name="cardColor">#045757</color>
+    <color name="recyclerColor">#044343</color>
+    <color name="cardColorTrans">#222222</color>
+</resources>
