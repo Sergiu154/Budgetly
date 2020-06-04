@@ -1,63 +1,32 @@
 package com.example.myapplication;
 
-import android.nfc.Tag;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
-
-import java.util.Set;
-import java.util.concurrent.Executor;
-
-import android.graphics.Color;
-import android.os.Bundle;
-
-import com.anychart.core.gauge.pointers.Bar;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.github.mikephil.charting.data.*;
+
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+
+import java.util.*;
 
 public class PieDataFragment extends Fragment {
 
@@ -192,7 +161,8 @@ public class PieDataFragment extends Fragment {
 
                 PieDataSet pieSet = new PieDataSet(entries, "Your name here");
 
-                pieSet.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"));
+                pieSet.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"),
+                        Color.parseColor("#ff6600"), Color.parseColor("#006666"), Color.parseColor("#99cc00"));
                 // pieSet.setColors(ordered_color_list);
                 pieSet.setValueTextColor(Color.rgb(230, 230, 230));
                 pieSet.setValueTextSize(20f);
@@ -220,16 +190,23 @@ public class PieDataFragment extends Fragment {
                 float poz = 0f;
                 for (String key : keys) {
                     float value = chart_data.get(key);
-                    BarEntry entry = new BarEntry(value, poz);
+                    BarEntry entry = new BarEntry(poz, value);
                     poz += 1f;
                     bar_entries.add(entry);
                 }
                 BarDataSet set = new BarDataSet(bar_entries, "BarDataSet");
                 BarData bar_data = new BarData(set);
 
-                bar_data.setBarWidth(0.9f);
+                // bar_data.setBarWidth(2.0f);
                 liniileMen.setData(bar_data);
-                liniileMen.setFitBars(true);
+
+
+                set.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"),
+                        Color.parseColor("#ff6600"), Color.parseColor("#006666"), Color.parseColor("#99cc00"));
+                liniileMen.getDescription().setEnabled(false);
+                liniileMen.getLegend().setEnabled(false);
+                liniileMen.setTouchEnabled(false);
+
                 liniileMen.invalidate();
 
 
