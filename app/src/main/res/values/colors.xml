@@ -3,4 +3,13 @@
     <color name="colorPrimary">#32CD32</color>
     <color name="colorPrimaryDark">#ffffffff</color>
     <color name="colorAccent">#000000</color>
+    <color name="textColor">@android:color/secondary_text_light</color>
+    <color name="emailColor">#57040303</color>
+    <color name="textHint">#A5A0A0</color>
+    <color name="transactionColor">#4c4c4c</color>
+    <color name="backgroundTransaction">#878787</color>
+    <color name="backgroundPie">#EAEAEA</color>
+    <color name="cardColor">#ffffffff</color>
+    <color name="recyclerColor">#f0f0f0</color>
+    <color name="cardColorTrans">#ffffffff</color>
 </resources>

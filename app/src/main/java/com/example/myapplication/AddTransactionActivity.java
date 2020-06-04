@@ -8,15 +8,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
@@ -39,12 +44,24 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     private TextView CategoryText;
     private String categoryName;
     private int imgSrc;
+    private Double totalSum;
+    private boolean hasMoney;
+    private HashMap<String, Boolean> income;
 
     /* main function */
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
+
+        // hashmap used for addTransaction Button to add money in case
+        // the user has chosen one of these categories
+        income = new HashMap<>();
+        String[] incomes = {"Award", "Interest Money", "Salary", "Gifts", "Selling", "Others"};
+        for (String type : incomes)
+            income.put(type, true);
+
         super.onCreate(savedInstanceState);
+        this.hasMoney = true;
         setContentView(R.layout.add_transaction_layout);
         setTransactionDate();
         String newString;
@@ -67,8 +84,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
 
     private void setCategory(String s, int src) {
         CategoryText = findViewById(R.id.transaction_select_category);
+        ImageView categoryImage = findViewById(R.id.add_category_photo);
         CategoryText.setText(s);
         categoryName = s;
+        categoryImage.setImageResource(src);
+        categoryImage.setTag(src);
         imgSrc = src;
     }
     /* end of main function */
@@ -76,6 +96,8 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     public void onSelectCategory(View view) {
 
         Intent intent = new Intent(this, SelectCategoryActivity.class);
+        intent.putExtra("whichActivity", 0);
+
         startActivity(intent);
 
     }
@@ -130,9 +152,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     /* button for adding transaction */
     public void addTransactionButtonClick(View v) {
 
+        hasMoney = true;
+
         transactionNotes = findViewById(R.id.transaction_notes);
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        EditText transactionPrice = findViewById(R.id.transaction_price);
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final EditText transactionPrice = findViewById(R.id.transaction_price);
 
 
         if (dateText.getText().toString().matches("")) {
@@ -149,19 +173,57 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             return;
         }
 
+        collectionReference
+                .document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
+                if (task.isSuccessful()) {
+
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    Boolean isPosivite = false;
+                    if (income.get(CategoryText.getText().toString()) != null)
+                        isPosivite = true;
+
+                    totalSum = (double) documentSnapshot.getData().get("amount");
+
+                    if (totalSum - Double.parseDouble(transactionPrice.getText().toString()) < 0 && !isPosivite) {
+                        Toast.makeText(AddTransactionActivity.this, "You are a little poor human", Toast.LENGTH_SHORT).show();
+
+                    } else {
+
+
+                        DocumentReference ref = collectionReference
+                                .document(firebaseAuth.getCurrentUser().getUid()).collection(monthCollection).document();
+
+                        Map<String, String> transaction = new HashMap<>();
+                        transaction.put("date", dateText.getText().toString());
+                        transaction.put("price", transactionPrice.getText().toString());
+                        transaction.put("notes", transactionNotes.getText().toString());
+                        TransactionDetails transactionDetails = new TransactionDetails(day, stringDay, month, year, categoryName, imgSrc, -Double.parseDouble(transactionPrice.getText().toString()), ref.getId());
+
+                        // daca adaug bani dau cu plus
+                        if (isPosivite)
+                            transactionDetails.setAmount(-transactionDetails.getAmount());
+
+                        ref.set(transactionDetails);
+
+                        // update totalsum
+                        HashMap<String, Double> sum = new HashMap<>();
+                        sum.put("amount", totalSum + transactionDetails.getAmount());
+                        collectionReference
+                                .document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").set(sum);
+
+
+                        startActivity(new Intent(AddTransactionActivity.this, MainActivity.class));
+
+                    }
+
+                }
+
+            }
+        });
         // adaugam tranzactia la luna respectiva in colectia userului
-
-        Map<String, String> transaction = new HashMap<>();
-        transaction.put("date", dateText.getText().toString());
-        transaction.put("price", transactionPrice.getText().toString());
-        transaction.put("notes", transactionNotes.getText().toString());
-        TransactionDetails transactionDetails = new TransactionDetails(this.day, this.stringDay, this.month, this.year, categoryName, imgSrc, Double.parseDouble(transactionPrice.getText().toString()));
-        DocumentReference ref = collectionReference
-                .document(firebaseAuth.getCurrentUser().getUid()).collection(monthCollection).document();
-        ref.set(transactionDetails);
-
-        startActivity(new Intent(AddTransactionActivity.this, MainActivity.class));
 
         // TODO: de verificat si daca s-a ales o categorie ---- am nevoie de o functie ce primeste categoria
 

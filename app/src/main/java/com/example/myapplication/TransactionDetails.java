@@ -11,6 +11,7 @@ public class TransactionDetails implements Comparable<TransactionDetails> {
     private String category;
     private int categoryPath;
     private double amount;
+    private String transactionId;
 
     // more data will be added later if necessary
     // maybe the source of the picture associated with the category
@@ -25,7 +26,7 @@ public class TransactionDetails implements Comparable<TransactionDetails> {
         this.stringDay = stringDay;
     }
 
-    public TransactionDetails(int day, String stringDay, String month, String year, String category, int categoryPath, double amount) {
+    public TransactionDetails(int day, String stringDay, String month, String year, String category, int categoryPath, double amount,String transactionId) {
         this.day = day;
         this.stringDay = stringDay;
         this.month = month;
@@ -33,8 +34,16 @@ public class TransactionDetails implements Comparable<TransactionDetails> {
         this.category = category;
         this.categoryPath = categoryPath;
         this.amount = amount;
+        this.transactionId = transactionId;
     }
 
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
 
     public int getDay() {
         return day;

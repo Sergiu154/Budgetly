@@ -54,9 +54,17 @@ public class DebtFragment extends Fragment {
             @Override
             public void onClick(View view, String category, int src) {
                 Context context = view.getContext();
-                Intent intent = new Intent(context, AddTransactionActivity.class);
+                Intent intent;
+                int res = getActivity().getIntent().getExtras().getInt("whichActivity");
+                if (res == 1)
+                    intent = new Intent(context,EditTransaction.class);
+                else intent = new Intent(context, AddTransactionActivity.class);
+
+
+
                 intent.putExtra("image_url", src);
                 intent.putExtra("image_name", category);
+                intent.putExtra("isQueried",true);
                 context.startActivity(intent);
             }
         };

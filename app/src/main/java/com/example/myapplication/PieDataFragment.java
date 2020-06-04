@@ -99,7 +99,6 @@ public class PieDataFragment extends Fragment {
         // pentru a mentine aceleasi culori la fiecare rulare, trebuie puse ordonate dupa cum le citesc
 
 
-
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         userID = fAuth.getCurrentUser().getUid();
@@ -122,21 +121,26 @@ public class PieDataFragment extends Fragment {
                 total_spend[0] = 0f;
                 for (int i = 0; i < names.size(); ++i) {
                     TransactionDetails temp = names.get(i);
-                    total_spend[0] += (float) temp.getAmount();
-                    if(!chart_data.containsKey(temp.getCategory())) {
-                        // nu am mai avut categ asta pana acum, o adaug
-                        chart_data.put(temp.getCategory(), (float) temp.getAmount());
-                        ordered_color_set.add(known_colors.get(temp.getCategory()));
-                    }
-                    else {
-                        // daca am mai avut categoria respectiva fac suma
+                    // am salvat platile cu - in fata, ca atunci cand adaugi un income sa vine cu plus
+                    // le afisam in piechart doar pe cele cu minus, adica expenses
 
-                        double old_value = chart_data.get(temp.getCategory());
-                        double new_value = old_value + temp.getAmount();
+                    if (temp.getAmount() < 0) {
+                        // am bagat minusuri la toate in fata ca sa iasa cu plus
+                        total_spend[0] += (float) -temp.getAmount();
+                        if (!chart_data.containsKey(temp.getCategory())) {
+                            // nu am mai avut categ asta pana acum, o adaug
+                            chart_data.put(temp.getCategory(), (float) (-temp.getAmount()));
+                            ordered_color_set.add(known_colors.get(temp.getCategory()));
+                        } else {
+                            // daca am mai avut categoria respectiva fac suma
 
-                        // n-am folosit replace pt ca aparent trebuie API24 pentru aia si avem 21
-                        chart_data.remove(temp.getCategory());
-                        chart_data.put(temp.getCategory(), (float)new_value);
+                            double old_value = chart_data.get(temp.getCategory());
+                            double new_value = old_value + temp.getAmount();
+
+                            // n-am folosit replace pt ca aparent trebuie API24 pentru aia si avem 21
+                            chart_data.remove(temp.getCategory());
+                            chart_data.put(temp.getCategory(), (float) new_value);
+                        }
                     }
                 }
 
@@ -148,7 +152,7 @@ public class PieDataFragment extends Fragment {
 
                 List<PieEntry> entries = new ArrayList<>();
                 Set<String> keys = chart_data.keySet();
-                for(String key : keys) {
+                for (String key : keys) {
                     float value = chart_data.get(key);
                     PieEntry entry = new PieEntry(value, key);
 
@@ -179,13 +183,12 @@ public class PieDataFragment extends Fragment {
                 graficuMen.invalidate();
 
 
-
                 // AICI ESTE PT BAR_CHART
 
                 List<BarEntry> bar_entries = new ArrayList<>();
 
                 float poz = 0f;
-                for(String key : keys) {
+                for (String key : keys) {
                     float value = chart_data.get(key);
                     BarEntry entry = new BarEntry(poz, value);
                     poz += 1f;
@@ -197,6 +200,7 @@ public class PieDataFragment extends Fragment {
                 // bar_data.setBarWidth(2.0f);
                 liniileMen.setData(bar_data);
 
+
                 set.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"),
                         Color.parseColor("#ff6600"), Color.parseColor("#006666"), Color.parseColor("#99cc00"));
                 liniileMen.getDescription().setEnabled(false);
@@ -206,12 +210,8 @@ public class PieDataFragment extends Fragment {
                 liniileMen.invalidate();
 
 
-
             }
         });
-
-
-
 
 
         return view;

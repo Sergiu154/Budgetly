@@ -4,32 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    tools:context=".AddTransactionActivity">
+    android:background="@color/colorPrimaryDark">
+
+    <TextView
+        android:id="@+id/edit_transaction_id"
+        android:layout_width="278dp"
+        android:layout_height="75dp"
+        android:text="sjdfhkjsdhfskjdfhds"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.515" />
 
     <Button
-        android:id="@+id/transaction_add_button"
-        android:layout_width="157dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="96dp"
+        android:id="@+id/transaction_update_button"
+        android:layout_width="172dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="140dp"
         android:elevation="0dp"
-        android:onClick="addTransactionButtonClick"
-        android:text="@string/add_transaction"
+        android:onClick="onSaveButton"
+        android:text="SAVE"
         android:textAllCaps="false"
         app:cornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/transaction_add_button2"
+        android:layout_width="172dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="48dp"
+        android:backgroundTint="#FF0808"
+        android:elevation="0dp"
+        android:onClick="onDeleteButton"
+        android:text="DELETE"
+        android:textAllCaps="false"
+        app:cornerRadius="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="414dp"
         android:layout_height="471dp"
-        android:layout_marginBottom="212dp"
+        android:layout_marginBottom="244dp"
         android:background="@color/colorPrimaryDark"
         android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
@@ -74,24 +104,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/transaction_select_category"
-            android:layout_width="249dp"
-            android:layout_height="41dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="35dp"
-            android:layout_marginBottom="332dp"
-            android:elevation="1dp"
-            android:hint="@string/select_category"
-            android:onClick="onSelectCategory"
-            android:textColor="@color/textColor"
-            android:textColorHint="@color/textHint"
-            android:textColorLink="@color/colorAccent"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.72"
-            app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/category_image"
+            android:layout_width="58dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="80dp"
+            app:layout_constraintEnd_toStartOf="@+id/transaction_select_category"
+            app:layout_constraintHorizontal_bias="0.879"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/account" />
 
         <TextView
             android:id="@+id/transaction_date"
@@ -111,7 +133,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.714" />
+            app:layout_constraintVertical_bias="0.535" />
 
         <TextView
             android:id="@+id/title"
@@ -147,18 +169,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/add_category_photo"
-            android:layout_width="58dp"
-            android:layout_height="51dp"
+        <TextView
+            android:id="@+id/transaction_select_category"
+            android:layout_width="249dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="84dp"
-            app:layout_constraintEnd_toStartOf="@+id/transaction_select_category"
-            app:layout_constraintHorizontal_bias="0.85"
+            android:layout_marginEnd="35dp"
+            android:layout_marginBottom="324dp"
+            android:elevation="1dp"
+            android:hint="@string/select_category"
+            android:onClick="onSelectCategory"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textHint"
+            android:textColorLink="@color/colorAccent"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.72"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/accessories" />
+            app:layout_constraintVertical_bias="0.272" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
