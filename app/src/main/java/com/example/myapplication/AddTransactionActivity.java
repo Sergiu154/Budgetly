@@ -243,7 +243,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
 
     }
     /* end of button for adding transaction */
-    
+
 }
 
 
