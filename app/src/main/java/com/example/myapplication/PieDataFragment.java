@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -92,8 +90,8 @@ public class PieDataFragment extends Fragment {
         final BarChart liniileMen = view.findViewById(R.id.linechart);
 
 
-        final Hashtable<String, Float> chart_data = new Hashtable<>();
-        // chart_data = <category, total amount registered for category>
+        final Hashtable<String, Float> chartData = new Hashtable<>();
+        // chartData = <category, total amount registered for category>
 
         final Set<Integer> ordered_color_set = new HashSet<>();
         // pentru a mentine aceleasi culori la fiecare rulare, trebuie puse ordonate dupa cum le citesc
@@ -107,7 +105,7 @@ public class PieDataFragment extends Fragment {
         DocumentReference docRef = fStore.collection("users").document(userID);
         CollectionReference colref = docRef.collection(numMonth + '-' + year);
 
-        final Float[] total_spend = new Float[1];
+        final Float[] totalSpend = new Float[1];
 
         // get the data from the BD
         colref.get().addOnSuccessListener(getActivity(), new OnSuccessListener<QuerySnapshot>() {
@@ -120,7 +118,7 @@ public class PieDataFragment extends Fragment {
                     System.out.println("names = " + names);
                 }
 
-                total_spend[0] = 0f;
+                totalSpend[0] = 0f;
                 for (int i = 0; i < names.size(); ++i) {
                     TransactionDetails temp = names.get(i);
                     // am salvat platile cu - in fata, ca atunci cand adaugi un income sa vine cu plus
@@ -128,20 +126,20 @@ public class PieDataFragment extends Fragment {
 
                     if (temp.getAmount() < 0) {
                         // am bagat minusuri la toate in fata ca sa iasa cu plus
-                        total_spend[0] += (float) -temp.getAmount();
-                        if (!chart_data.containsKey(temp.getCategory())) {
+                        totalSpend[0] += (float) -temp.getAmount();
+                        if (!chartData.containsKey(temp.getCategory())) {
                             // nu am mai avut categ asta pana acum, o adaug
-                            chart_data.put(temp.getCategory(), (float) (-temp.getAmount()));
+                            chartData.put(temp.getCategory(), (float) (-temp.getAmount()));
                             ordered_color_set.add(known_colors.get(temp.getCategory()));
                         } else {
                             // daca am mai avut categoria respectiva fac suma
 
-                            double old_value = chart_data.get(temp.getCategory());
+                            double old_value = chartData.get(temp.getCategory());
                             double new_value = old_value - temp.getAmount();
 
                             // n-am folosit replace pt ca aparent trebuie API24 pentru aia si avem 21
-                            chart_data.remove(temp.getCategory());
-                            chart_data.put(temp.getCategory(), (float) new_value);
+                            chartData.remove(temp.getCategory());
+                            chartData.put(temp.getCategory(), (float) new_value);
                         }
                     }
                 }
@@ -149,13 +147,13 @@ public class PieDataFragment extends Fragment {
 
                 LinkedList<Integer> ordered_color_list = new LinkedList<>(ordered_color_set);
                 // get the names of the categories to be displayed
-                Set<String> keys = chart_data.keySet();
+                Set<String> keys = chartData.keySet();
 
                 // display the piechart
-                setPieChart(graficuMen, chart_data, total_spend, keys);
+                setPieChart(graficuMen, chartData, totalSpend, keys);
 
                 // display the barchar
-                setBarChart(keys, chart_data, liniileMen);
+                setBarChart(keys, chartData, liniileMen);
 
 
             }
