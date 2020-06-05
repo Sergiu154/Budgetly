@@ -6,14 +6,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.ArrayList;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A fragment which corresponds to one of the tabs from SelectCategory activity
  */
 public class ExpenseFragment extends Fragment {
 
@@ -25,9 +27,11 @@ public class ExpenseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.expense_fragment_layout, container, false);
+        View view = inflater.inflate(R.layout.expense_fragment_layout, container, false);
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+
+        // prepare the categories and their images
 
         ArrayList<Category> categories = new ArrayList<>();
         ArrayList<Element> element = new ArrayList<>();
@@ -37,6 +41,43 @@ public class ExpenseFragment extends Fragment {
         Category categ = new Category("Food & Beverage", element, R.drawable.food);
         categories.add(categ);
 
+
+        createCategories(categories);
+
+        // when a category is selected, the data is transferred to the add category page
+        // where the user continues to add data to her/his transaction
+        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, String category, int src) {
+                Context context = view.getContext();
+                Intent intent;
+
+                // if the flag whichActivity is set to 1 then the requests came
+                // from the edit transaction activity
+                // otherwise the request is from AddTransaction
+                int res = getActivity().getIntent().getExtras().getInt("whichActivity");
+                if (res == 1)
+                    intent = new Intent(context, EditTransaction.class);
+                else intent = new Intent(context, AddTransactionActivity.class);
+
+                // get the data back to the activity which generated the request
+
+                intent.putExtra("image_url", src);
+                intent.putExtra("image_name", category);
+                intent.putExtra("isQueried", true);
+                context.startActivity(intent);
+            }
+        };
+        // create and set the adapter
+
+        ElementAdapter adapter = new ElementAdapter(categories, listener);
+        recyclerView.setAdapter(adapter);
+        return view;
+    }
+
+    private void createCategories(ArrayList<Category> categories) {
+        ArrayList<Element> element;
+        Category categ;
         element = new ArrayList<>();
         element.add(new Element("Phone", R.drawable.phone));
         element.add(new Element("Water", R.drawable.water));
@@ -113,25 +154,5 @@ public class ExpenseFragment extends Fragment {
 
         categ = new Category("Other", element, R.drawable.other);
         categories.add(categ);
-        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
-            @Override
-            public void onClick(View view, String category, int src) {
-                Context context = view.getContext();
-                Intent intent;
-                int res = getActivity().getIntent().getExtras().getInt("whichActivity");
-                if (res == 1)
-                    intent = new Intent(context,EditTransaction.class);
-                else intent = new Intent(context, AddTransactionActivity.class);
-
-
-                intent.putExtra("image_url", src);
-                intent.putExtra("image_name", category);
-                intent.putExtra("isQueried",true);
-                context.startActivity(intent);
-            }
-        };
-        ElementAdapter adapter = new ElementAdapter(categories,listener);
-        recyclerView.setAdapter(adapter);
-        return view;
     }
 }

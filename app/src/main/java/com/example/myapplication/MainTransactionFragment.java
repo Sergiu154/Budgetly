@@ -34,6 +34,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+/**
+ * This fragments shows the monthly transactions
+ * the tabs are automatically generated from the start of the year to the current month
+ */
 public class MainTransactionFragment extends Fragment {
 
     ViewPager viewPager;
@@ -45,14 +49,10 @@ public class MainTransactionFragment extends Fragment {
     private CollectionReference db = FirebaseFirestore.getInstance().collection("users");
 
 
-    //
-//    public MainTransactionFragment(Boolean isChart) {
-//
-//        this.isChart = isChart;
-//    }
     public MainTransactionFragment() {
     }
 
+    // use to save and retrieve some data when
     public static MainTransactionFragment newInstance(Boolean isChart) {
 
         Bundle args = new Bundle();
@@ -66,11 +66,13 @@ public class MainTransactionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // get references to the viewPager and tabs
         view = inflater.inflate(R.layout.main_transaction_layout, container, false);
         viewPager = view.findViewById(R.id.viewpager);
         tabLayout = view.findViewById(R.id.sliding_tabs);
         totalAmount = view.findViewById(R.id.totalAmount_id);
 
+        // query the database and save the transactions of the current month
         db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             private static final String TAG = "MAIN_TRANSACTION";
 
@@ -99,6 +101,7 @@ public class MainTransactionFragment extends Fragment {
 
     }
 
+    // init and generate the tabs automatically
     public void initTabs() {
 
 
@@ -129,7 +132,6 @@ public class MainTransactionFragment extends Fragment {
 
         // set the adapter for the viewPager
         viewPager.setAdapter(new TransactionFragmentAdapter(getChildFragmentManager(), getContext(), tabTitles, isChart));
-//        viewPager.getAdapter().notifyDataSetChanged();
 
         // get the tabLayout and bind it with the viewPager
         tabLayout.setupWithViewPager(viewPager);

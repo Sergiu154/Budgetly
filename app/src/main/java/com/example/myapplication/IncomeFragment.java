@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A fragment which corresponds to one of the tabs from SelectCategory activity
  */
 public class IncomeFragment extends Fragment {
 
     public IncomeFragment() {
         // Required empty public constructor
-        // test
     }
 
 
@@ -29,10 +28,11 @@ public class IncomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.income_fragment_layout, container, false);
+        View view = inflater.inflate(R.layout.income_fragment_layout, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
+        // prepare the categories and their images
         ArrayList<Category> categories = new ArrayList<>();
         final ArrayList<Element> element = new ArrayList<>();
         element.add(new Element("Award", R.drawable.award));
@@ -45,23 +45,31 @@ public class IncomeFragment extends Fragment {
         Category categ = new Category("Income", element, R.drawable.income);
         categories.add(categ);
 
+        // when a category is selected, the data is transferred to the add category page
+        // where the user continues to add data to her/his transaction
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, String category, int src) {
                 Context context = view.getContext();
                 Intent intent;
+                // if the flag whichActivity is set to 1 then the requests came
+                // from the edit transaction activity
+                // otherwise the request is from AddTransaction
+
                 int res = getActivity().getIntent().getExtras().getInt("whichActivity");
                 if (res == 1)
-                    intent = new Intent(context,EditTransaction.class);
+                    intent = new Intent(context, EditTransaction.class);
                 else intent = new Intent(context, AddTransactionActivity.class);
 
+                // get the data back to the activity which generated the request
                 intent.putExtra("image_url", src);
-                intent.putExtra("image_name",category);
-                intent.putExtra("isQueried",true);
+                intent.putExtra("image_name", category);
+                intent.putExtra("isQueried", true);
                 context.startActivity(intent);
             }
         };
-        ElementAdapter adapter = new ElementAdapter(categories,listener);
+        // create and set the adapter
+        ElementAdapter adapter = new ElementAdapter(categories, listener);
         recyclerView.setAdapter(adapter);
         return view;
     }

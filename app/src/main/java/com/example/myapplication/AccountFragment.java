@@ -17,7 +17,14 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
+/**
+ * Fragment which is inflated into the main view then the option button "Account"
+ * from the bottom menu is pressed
+ * It displays basic information about the user.
+ * The user has the option to change the colour theme to dark mode.
+ * The user can log out from the app.
+ * About the app button.
+ */
 public class AccountFragment extends Fragment {
 
 
@@ -27,13 +34,13 @@ public class AccountFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_account,container,false);
+        View view = inflater.inflate(R.layout.activity_account, container, false);
 
         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String emailCurrUSer = currentUser.getEmail();
         int index = emailCurrUSer.indexOf('@');
-        String username = emailCurrUSer.substring(0,index);
+        String username = emailCurrUSer.substring(0, index);
 
         TextView nameTextView = view.findViewById(R.id.textView4);
         nameTextView.setText(username);
@@ -70,19 +77,20 @@ public class AccountFragment extends Fragment {
         });
         aboutButton.setOnClickListener(new View.OnClickListener() {
             boolean visible;
+
             @Override
             public void onClick(View view) {
-                visible=!visible;
-                about.setVisibility(visible ? View.VISIBLE: View.GONE);
+                visible = !visible;
+                about.setVisibility(visible ? View.VISIBLE : View.GONE);
             }
         });
         return view;
     }
 
     public static AccountFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         AccountFragment fragment = new AccountFragment();
         fragment.setArguments(args);
         return fragment;
