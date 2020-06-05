@@ -244,23 +244,6 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     }
     /* end of button for adding transaction */
 
-
-    // get functions
-
-    // zicea bobo ca are nevoie de suma introdusa
-    public Double getPrice() {
-        EditText priceSelected = findViewById(R.id.transaction_price);
-
-        if (priceSelected.getText().toString().matches("")) {
-            return -1.0; //inseamna ca nu s-a introdus nimic !! - cred ca e inutil, dar mna de verificare
-        }
-        String p = priceSelected.getText().toString();
-        return Double.parseDouble(p);
-    }
-
-    public TextView getDate() {
-        return dateText;
-    }
 }
 
 

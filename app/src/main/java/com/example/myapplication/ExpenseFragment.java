@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -76,83 +77,109 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void createCategories(ArrayList<Category> categories) {
+
+        String[] categorii = {"Phone", "Water", "Electricity",
+                "Gas", "Television", "Internet",
+                "Rentals", "Fees & Charges", "Insurances",
+                "Bills & Utilities", "Taxi", "Parking Fees",
+                "Petrol", "Maintenance", "Transportation",
+                "Clothing", "Footwear", "Accessories",
+                "Electronics", "Shopping", "Movies",
+                "Games", "Travel", "Entertainment",
+                "Sports", "Doctor", "Pharmacy",
+                "Personal Care", "Health & Fitness",
+                "Marriage", "Funeral", "Charity",
+                "Gifts & Donations", "Children & Babies",
+                "Home Improvement", "Home Services", "Pets",
+                "Family", "Books", "Education", "Investment",
+                "Business", "Withdrawal", "Others", "Other"};
+
+        int[] imagini = {R.drawable.phone, R.drawable.water, R.drawable.electricity,
+                R.drawable.gas, R.drawable.tv, R.drawable.internet,
+                R.drawable.rentals, R.drawable.fees, R.drawable.insurance,
+                R.drawable.bills, R.drawable.taxi, R.drawable.parking,
+                R.drawable.petrol, R.drawable.maintenance, R.drawable.transport,
+                R.drawable.clothing, R.drawable.footwear, R.drawable.accessories,
+                R.drawable.electronics, R.drawable.shopping, R.drawable.movies,
+                R.drawable.games, R.drawable.travel, R.drawable.entertainment,
+                R.drawable.sports, R.drawable.doctor, R.drawable.pharmacy,
+                R.drawable.care, R.drawable.health, R.drawable.marriage,
+                R.drawable.funeral, R.drawable.charity, R.drawable.gifts,
+                R.drawable.children, R.drawable.home, R.drawable.services,
+                R.drawable.family, R.drawable.books, R.drawable.courses,
+                R.drawable.education, R.drawable.investment, R.drawable.business,
+                R.drawable.withdrawal, R.drawable.other, R.drawable.other
+        };
+
         ArrayList<Element> element;
         Category categ;
         element = new ArrayList<>();
-        element.add(new Element("Phone", R.drawable.phone));
-        element.add(new Element("Water", R.drawable.water));
-        element.add(new Element("Electricity", R.drawable.electricity));
-        element.add(new Element("Gas", R.drawable.gas));
-        element.add(new Element("Television", R.drawable.tv));
-        element.add(new Element("Internet", R.drawable.internet));
-        element.add(new Element("Rentals", R.drawable.rentals));
-        element.add(new Element("Fees & Charges", R.drawable.fees));
-        element.add(new Element("Insurances", R.drawable.insurance));
-        categ = new Category("Bills & Utilities", element, R.drawable.bills);
-        categories.add(categ);
+        int i = 0;
+        int len = imagini.length;
+
+        for (i = 0; i < 9; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+
+        i += 1;
 
         element = new ArrayList<>();
-        element.add(new Element("Taxi", R.drawable.taxi));
-        element.add(new Element("Parking Fees", R.drawable.parking));
-        element.add(new Element("Petrol", R.drawable.petrol));
-        element.add(new Element("Maintenance", R.drawable.maintenance));
-        categ = new Category("Transportation", element, R.drawable.transport);
-        categories.add(categ);
+        for (i = 10; i < 14; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+        i += 1;
+
 
         element = new ArrayList<>();
-        element.add(new Element("Clothing", R.drawable.clothing));
-        element.add(new Element("Footwear", R.drawable.footwear));
-        element.add(new Element("Accessories", R.drawable.accessories));
-        element.add(new Element("Electronics", R.drawable.electronics));
-        categ = new Category("Shopping", element, R.drawable.shopping);
-        categories.add(categ);
+        for (i = 15; i < 19; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+        i += 1;
+
 
         element = new ArrayList<>();
-        element.add(new Element("Movies", R.drawable.movies));
-        element.add(new Element("Games", R.drawable.games));
-        element.add(new Element("Travel", R.drawable.travel));
-        categ = new Category("Entertainment", element, R.drawable.entertainment);
-        categories.add(categ);
+        for (i = 20; i < 23; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+        i += 1;
+
 
         element = new ArrayList<>();
-        element.add(new Element("Sports", R.drawable.sports));
-        element.add(new Element("Doctor", R.drawable.doctor));
-        element.add(new Element("Pharmacy", R.drawable.pharmacy));
-        element.add(new Element("Personal Care", R.drawable.care));
-        categ = new Category("Health & Fitness", element, R.drawable.health);
-        categories.add(categ);
+
+        for (i = 24; i < 28; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+        i += 1;
+
 
         element = new ArrayList<>();
-        element.add(new Element("Marriage", R.drawable.marriage));
-        element.add(new Element("Funeral", R.drawable.funeral));
-        element.add(new Element("Charity", R.drawable.charity));
 
-        categ = new Category("Gifts & Donations", element, R.drawable.gifts);
-        categories.add(categ);
-
-        element = new ArrayList<>();
-        element.add(new Element("Children & Babies", R.drawable.children));
-        element.add(new Element("Home Improvement", R.drawable.home));
-        element.add(new Element("Home Services", R.drawable.services));
-        element.add(new Element("Pets", R.drawable.pets));
-
-        categ = new Category("Family", element, R.drawable.family);
-        categories.add(categ);
+        for (i = 29; i < 32; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+        i += 1;
 
         element = new ArrayList<>();
-        element.add(new Element("Books", R.drawable.books));
-        element.add(new Element("Courses", R.drawable.courses));
 
-        categ = new Category("Education", element, R.drawable.education);
-        categories.add(categ);
+        for (i = 33; i < 37; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+        i += 1;
+
 
         element = new ArrayList<>();
-        element.add(new Element("Investment", R.drawable.investment));
-        element.add(new Element("Business", R.drawable.business));
-        element.add(new Element("Withdrawal", R.drawable.withdrawal));
-        element.add(new Element("Others", R.drawable.other));
 
-        categ = new Category("Other", element, R.drawable.other);
-        categories.add(categ);
+        for (i = 38; i < 40; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i], element, imagini[i]));
+        i += 1;
+
+
+        element = new ArrayList<>();
+
+        for (i = 41; i < 45; i++)
+            element.add(new Element(categorii[i], imagini[i]));
+        categories.add(new Category(categorii[i - 1], element, imagini[i - 1]));
+
     }
 }
