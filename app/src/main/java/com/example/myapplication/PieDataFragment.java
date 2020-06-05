@@ -135,7 +135,7 @@ public class PieDataFragment extends Fragment {
                             // daca am mai avut categoria respectiva fac suma
 
                             double old_value = chart_data.get(temp.getCategory());
-                            double new_value = old_value + temp.getAmount();
+                            double new_value = old_value - temp.getAmount();
 
                             // n-am folosit replace pt ca aparent trebuie API24 pentru aia si avem 21
                             chart_data.remove(temp.getCategory());
