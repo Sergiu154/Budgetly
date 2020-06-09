@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,17 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:launchMode="singleTask">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask" />
 
-        </activity>
-        <activity android:name="EditTransaction"/>
+        <activity android:name="EditTransaction" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AddTransactionActivity" />
         <activity android:name=".SelectCategoryActivity" />
 
+        <receiver android:name=".NotificationBroadcast" />
     </application>
-
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
