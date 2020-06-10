@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -28,14 +26,23 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.*;
 
+/**
+ * This fragment is inflated in each tab when the user
+ * has click the report icon
+ * Its scope is to display a visual representation of the transactions in a illustrative way
+ * A bar chart and a pie char will display the values of each transaction in a different colour
+ */
 public class PieDataFragment extends Fragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userID;
 
     public PieDataFragment() {
     }
 
-
+    // data passed between tabs then a fragment is switched
     public static PieDataFragment newInstance(int page, List<String> tabDate) {
 
         PieDataFragment fragment = new PieDataFragment();
@@ -51,13 +58,11 @@ public class PieDataFragment extends Fragment {
         return fragment;
     }
 
-
+    // use to map the colours to the transactions
     private static Hashtable<String, Integer> known_colors = new Hashtable<>();
 
-
+    // the list of transactions
     private List<TransactionDetails> names = new ArrayList<>();
-
-    private RecylerViewAdapter recylerViewAdapter;
 
 
     private void addName(TransactionDetails t) {
@@ -65,49 +70,44 @@ public class PieDataFragment extends Fragment {
     }
 
 
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-    String userID;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.pie_data_layout, container, false);
 
-
+        // get data from the bundle
         Bundle args = this.getArguments();
         String year = args.getString("year");
-        System.out.println("ASDSADAS PIE YEAR = " + year);
-
         String numMonth = args.getString("numMonth").replaceAll("^0+(?!$)", "");
-        System.out.println("ASDASSAF PIE MONTH = " + numMonth);
 
-
+        // map the known colours to the chart
         known_colors.put("Sport", Color.parseColor("#6699ff"));
         known_colors.put("Food", Color.parseColor("#99ff66"));
         known_colors.put("Car repair", Color.parseColor("#9494b8"));
 
-
+        // get the charts
         final PieChart graficuMen = view.findViewById(R.id.piechart);
         final BarChart liniileMen = view.findViewById(R.id.linechart);
 
 
-        final Hashtable<String, Float> chart_data = new Hashtable<>();
-        // chart_data = <category, total amount registered for category>
+        final Hashtable<String, Float> chartData = new Hashtable<>();
+        // chartData = <category, total amount registered for category>
 
         final Set<Integer> ordered_color_set = new HashSet<>();
         // pentru a mentine aceleasi culori la fiecare rulare, trebuie puse ordonate dupa cum le citesc
 
-
+        // get the refrence to the user and the DB
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         userID = fAuth.getCurrentUser().getUid();
 
+        // prepare the DB refrence
         DocumentReference docRef = fStore.collection("users").document(userID);
         CollectionReference colref = docRef.collection(numMonth + '-' + year);
 
-        final Float[] total_spend = new Float[1];
+        final Float[] totalSpend = new Float[1];
 
+        // get the data from the BD
         colref.get().addOnSuccessListener(getActivity(), new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -118,7 +118,7 @@ public class PieDataFragment extends Fragment {
                     System.out.println("names = " + names);
                 }
 
-                total_spend[0] = 0f;
+                totalSpend[0] = 0f;
                 for (int i = 0; i < names.size(); ++i) {
                     TransactionDetails temp = names.get(i);
                     // am salvat platile cu - in fata, ca atunci cand adaugi un income sa vine cu plus
@@ -126,88 +126,34 @@ public class PieDataFragment extends Fragment {
 
                     if (temp.getAmount() < 0) {
                         // am bagat minusuri la toate in fata ca sa iasa cu plus
-                        total_spend[0] += (float) -temp.getAmount();
-                        if (!chart_data.containsKey(temp.getCategory())) {
+                        totalSpend[0] += (float) -temp.getAmount();
+                        if (!chartData.containsKey(temp.getCategory())) {
                             // nu am mai avut categ asta pana acum, o adaug
-                            chart_data.put(temp.getCategory(), (float) (-temp.getAmount()));
+                            chartData.put(temp.getCategory(), (float) (-temp.getAmount()));
                             ordered_color_set.add(known_colors.get(temp.getCategory()));
                         } else {
                             // daca am mai avut categoria respectiva fac suma
 
-                            double old_value = chart_data.get(temp.getCategory());
-                            double new_value = old_value + temp.getAmount();
+                            double old_value = chartData.get(temp.getCategory());
+                            double new_value = old_value - temp.getAmount();
 
                             // n-am folosit replace pt ca aparent trebuie API24 pentru aia si avem 21
-                            chart_data.remove(temp.getCategory());
-                            chart_data.put(temp.getCategory(), (float) new_value);
+                            chartData.remove(temp.getCategory());
+                            chartData.put(temp.getCategory(), (float) new_value);
                         }
                     }
                 }
 
 
                 LinkedList<Integer> ordered_color_list = new LinkedList<>(ordered_color_set);
+                // get the names of the categories to be displayed
+                Set<String> keys = chartData.keySet();
 
+                // display the piechart
+                setPieChart(graficuMen, chartData, totalSpend, keys);
 
-                // AICI ESTE PT PIE_CHART
-
-                List<PieEntry> entries = new ArrayList<>();
-                Set<String> keys = chart_data.keySet();
-                for (String key : keys) {
-                    float value = chart_data.get(key);
-                    PieEntry entry = new PieEntry(value, key);
-
-                    entries.add(entry);
-                }
-
-                PieDataSet pieSet = new PieDataSet(entries, "Your name here");
-
-                pieSet.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"),
-                        Color.parseColor("#ff6600"), Color.parseColor("#006666"), Color.parseColor("#99cc00"));
-                // pieSet.setColors(ordered_color_list);
-                pieSet.setValueTextColor(Color.rgb(230, 230, 230));
-                pieSet.setValueTextSize(20f);
-
-                PieData data = new PieData(pieSet);
-                graficuMen.setData(data);
-
-                // graficuMen.setBackgroundColor(Color.parseColor("#e0e0eb"));
-                graficuMen.setCenterText("Cheltuieli totale\n" + total_spend[0].intValue() + " lei cu " + names.size() + " tranzactii");
-                graficuMen.setCenterTextColor(Color.rgb(246, 55, 109));
-                graficuMen.setCenterTextSize(20f);
-                graficuMen.setTouchEnabled(false);
-                graficuMen.getLegend().setEnabled(false);
-                graficuMen.getDescription().setEnabled(false);
-
-                graficuMen.animateXY(1000, 1000, Easing.EaseInOutCubic);
-
-                graficuMen.invalidate();
-
-
-                // AICI ESTE PT BAR_CHART
-
-                List<BarEntry> bar_entries = new ArrayList<>();
-
-                float poz = 0f;
-                for (String key : keys) {
-                    float value = chart_data.get(key);
-                    BarEntry entry = new BarEntry(poz, value);
-                    poz += 1f;
-                    bar_entries.add(entry);
-                }
-                BarDataSet set = new BarDataSet(bar_entries, "BarDataSet");
-                BarData bar_data = new BarData(set);
-
-                // bar_data.setBarWidth(2.0f);
-                liniileMen.setData(bar_data);
-
-
-                set.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"),
-                        Color.parseColor("#ff6600"), Color.parseColor("#006666"), Color.parseColor("#99cc00"));
-                liniileMen.getDescription().setEnabled(false);
-                liniileMen.getLegend().setEnabled(false);
-                liniileMen.setTouchEnabled(false);
-
-                liniileMen.invalidate();
+                // display the barchar
+                setBarChart(keys, chartData, liniileMen);
 
 
             }
@@ -217,12 +163,78 @@ public class PieDataFragment extends Fragment {
         return view;
     }
 
-    private void setData(View view) {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity());
-        RecyclerView recyclerView = view.findViewById(R.id.my_recycler_view);
-        recyclerView.setLayoutManager(layoutManager);
-        this.recylerViewAdapter = new RecylerViewAdapter(names, this.getActivity());
-        recyclerView.setAdapter(recylerViewAdapter);
+    // a function which takes the data and displays it in a barhart
+    private void setBarChart(Set<String> keys, Hashtable<String, Float> chart_data, BarChart liniileMen) {
+        List<BarEntry> bar_entries = new ArrayList<>();
+
+        // get each entry for the barchart and its associated amount
+        float poz = 0f;
+        for (String key : keys) {
+            float value = chart_data.get(key);
+            BarEntry entry = new BarEntry(poz, value);
+            poz += 1f;
+            bar_entries.add(entry);
+        }
+        // set the label for the plot
+        BarDataSet set = new BarDataSet(bar_entries, "BarDataSet");
+        BarData bar_data = new BarData(set);
+
+        // set the data and the colours to the chart
+        liniileMen.setData(bar_data);
+
+        // chart configurations
+        set.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"),
+                Color.parseColor("#ff6600"), Color.parseColor("#006666"), Color.parseColor("#99cc00"));
+        liniileMen.getDescription().setEnabled(false);
+        liniileMen.getLegend().setEnabled(false);
+        liniileMen.setTouchEnabled(false);
+
+        liniileMen.invalidate();
     }
+    // a function which takes the data and displays it in a piechart
+
+    public void setPieChart(PieChart graficuMen, Hashtable<String, Float> chart_data, Float[] total_spend, Set<String> keys) {
+        List<PieEntry> entries = new ArrayList<>();
+
+        // get each entry for the piechart and its associated amount
+
+        for (String key : keys) {
+            float value = chart_data.get(key);
+            PieEntry entry = new PieEntry(value, key);
+
+            entries.add(entry);
+        }
+
+        // set the label for the plot
+        PieDataSet pieSet = new PieDataSet(entries, "Your name here");
+
+        pieSet.setColors(Color.parseColor("#6699ff"), Color.parseColor("#33cc00"), Color.parseColor("#9494b8"),
+                Color.parseColor("#ff6600"), Color.parseColor("#006666"), Color.parseColor("#99cc00"));
+        // pieSet.setColors(ordered_color_list);
+        pieSet.setValueTextColor(Color.rgb(230, 230, 230));
+        pieSet.setValueTextSize(20f);
+
+        PieData data = new PieData(pieSet);
+
+        // set the data and the colours to the chart
+
+        graficuMen.setData(data);
+
+
+        // chart configurations
+        graficuMen.setCenterText(total_spend[0].intValue() + " lei");
+        graficuMen.setCenterTextColor(Color.rgb(119, 136, 153));
+        graficuMen.setCenterTextSize(20f);
+        graficuMen.setTouchEnabled(false);
+        graficuMen.getLegend().setEnabled(false);
+        graficuMen.getDescription().setEnabled(false);
+
+        graficuMen.animateXY(1000, 1000, Easing.EaseInOutCubic);
+
+        graficuMen.invalidate();
+
+
+    }
+
 
 }

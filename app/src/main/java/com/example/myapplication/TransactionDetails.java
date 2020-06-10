@@ -2,6 +2,10 @@ package com.example.myapplication;
 
 import java.util.Comparator;
 
+/**
+ * A class which will encapsulate all the data about a specific transaction
+ * - it implements the comparable interface to sort the transactions accordingly
+ */
 public class TransactionDetails implements Comparable<TransactionDetails> {
 
     private int day;
@@ -13,8 +17,6 @@ public class TransactionDetails implements Comparable<TransactionDetails> {
     private double amount;
     private String transactionId;
 
-    // more data will be added later if necessary
-    // maybe the source of the picture associated with the category
     public TransactionDetails() {
     }
 
@@ -26,7 +28,7 @@ public class TransactionDetails implements Comparable<TransactionDetails> {
         this.stringDay = stringDay;
     }
 
-    public TransactionDetails(int day, String stringDay, String month, String year, String category, int categoryPath, double amount,String transactionId) {
+    public TransactionDetails(int day, String stringDay, String month, String year, String category, int categoryPath, double amount, String transactionId) {
         this.day = day;
         this.stringDay = stringDay;
         this.month = month;
@@ -93,6 +95,7 @@ public class TransactionDetails implements Comparable<TransactionDetails> {
         this.amount = amount;
     }
 
+    // sort the transactions by their date
     @Override
     public int compareTo(TransactionDetails o) {
         return day - o.getDay();

@@ -3,6 +3,11 @@ package com.example.myapplication;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * A class which will encapsulate all the data about a specific transaction in SelectCategory class
+ * - implements Parcelable interface to move the data between activities
+ */
+
 public class Element implements Parcelable {
     public final String name;
     private int imgSrc;

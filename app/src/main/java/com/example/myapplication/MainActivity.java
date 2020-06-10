@@ -34,7 +34,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.SimpleFormatter;
 
-
+/**
+ * Core activity of the app
+ * Contains a bottom menu which gets you to different activities
+ */
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
 
@@ -52,16 +55,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setContentView(R.layout.activity_main);
 
         // initialize the tabs with the months of the year up to the current month
-//        initTabs();
 
+        // get the bottom navigation and set a listener to it
         BottomNavigationView bottomNavigationView = findViewById(R.id.buttom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
+        // by default, the main transaction fragment will be loaded when the app is opened
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, MainTransactionFragment.newInstance(false)).commit();
 
 
     }
 
+    // the bottom navigation listener which will take the user to activities such as
+    // account,report,transactions and add transactions
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -70,22 +76,25 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     Fragment selectedFragment = null;
                     switch (item.getItemId()) {
 
+                        // get the user to the transaction history
                         case R.id.transaction_nav:
                             selectedFragment = MainTransactionFragment.newInstance(false);
                             break;
+                        // the piehcart and barchart report
                         case R.id.report_nav:
                             selectedFragment = MainTransactionFragment.newInstance(true);
                             break;
-
+                        // account page
                         case R.id.account_nav:
                             selectedFragment = AccountFragment.newInstance();
                             break;
-
+                        // add a transaction
                         case R.id.add_transaction_nav:
                             Intent intent = new Intent(MainActivity.this, AddTransactionActivity.class);
                             startActivity(intent);
                             break;
                     }
+                    // inflate the fragment to the view
                     if (selectedFragment != null)
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
@@ -93,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 }
             };
 
-    //
+    // create the options of the bottom menu and inflate it
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -102,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         return true;
     }
 
+    // inflate pop-up menu in a upper-right corner
+    // a menu which gives the user the possibility to log out from the app
     public void showPop(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.setOnMenuItemClickListener(this);
@@ -109,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popupMenu.show();
     }
 
+    // listener for each option of the pop-up menu
+    // adjust balance,sort by category or log out from the app
+    // prints a text in a toast when each action is triggered
     @Override
     public boolean onMenuItemClick(MenuItem item) {
 
@@ -122,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 Toast.makeText(this, "Category", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.logout_main:
+                // signs out the user the redirects him/her to the login page
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 return true;

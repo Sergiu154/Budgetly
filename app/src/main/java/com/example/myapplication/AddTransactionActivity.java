@@ -29,6 +29,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Add transaction activity
+ * The user can choose a type of category, the date of the transaction and the amount of money spend
+ */
 public class AddTransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "AddTransactionActivity";
@@ -63,9 +67,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         super.onCreate(savedInstanceState);
         this.hasMoney = true;
         setContentView(R.layout.add_transaction_layout);
+        // set transaction date
         setTransactionDate();
         String newString;
         int src;
+        // get the image url and category name from the SelectCategory activity
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
@@ -81,6 +87,9 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         }
         setCategory(newString, src);
     }
+
+    // when SelectCategory is pressed, signal the activity that
+    // the request comes from EdiTransaction
 
     private void setCategory(String s, int src) {
         CategoryText = findViewById(R.id.transaction_select_category);
@@ -115,6 +124,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         });
     }
 
+    // show Google Calendar DatePicker
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
@@ -126,6 +136,9 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         datePickerDialog.show();
     }
 
+    // when data has been set , map the number of the month to its name
+    // split the date in day,month and year and save it to the class members
+    // for later use in updating the DB
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         HashMap<String, String> months = new HashMap<>();
@@ -159,9 +172,8 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         final EditText transactionPrice = findViewById(R.id.transaction_price);
 
 
+        //check the fields for errors
         if (dateText.getText().toString().matches("")) {
-//            Toast.makeText(AddTransactionActivity.this, transactionPrice.getText().toString(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(AddTransactionActivity.this, transactionNotes.getText().toString(), Toast.LENGTH_SHORT).show();
             Toast.makeText(AddTransactionActivity.this, monthCollection, Toast.LENGTH_SHORT).show();
 
             return;
@@ -173,6 +185,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             return;
         }
 
+        // update the DB when a new transaction is added
         collectionReference
                 .document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -187,6 +200,8 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
 
                     totalSum = (double) documentSnapshot.getData().get("amount");
 
+                    // if the user does not have enough money
+                    // display a little message
                     if (totalSum - Double.parseDouble(transactionPrice.getText().toString()) < 0 && !isPosivite) {
                         Toast.makeText(AddTransactionActivity.this, "You are a little poor human", Toast.LENGTH_SHORT).show();
 
@@ -225,30 +240,10 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         });
         // adaugam tranzactia la luna respectiva in colectia userului
 
-        // TODO: de verificat si daca s-a ales o categorie ---- am nevoie de o functie ce primeste categoria
 
-        // TODO: de executat ce trebuie facut cu butonul ---- am nevoie sa stiu ce trebuie returnat si tipul returnat (probabil o sa fie un sir de string-uri)
     }
     /* end of button for adding transaction */
 
-
-    // get functions
-    // TODO: get pentru categorie si pentru text-ul aditional
-
-    // zicea bobo ca are nevoie de suma introdusa
-    public Double getPrice() {
-        EditText priceSelected = findViewById(R.id.transaction_price);
-
-        if (priceSelected.getText().toString().matches("")) {
-            return -1.0; //inseamna ca nu s-a introdus nimic !! - cred ca e inutil, dar mna de verificare
-        }
-        String p = priceSelected.getText().toString();
-        return Double.parseDouble(p);
-    }
-
-    public TextView getDate() {
-        return dateText;
-    }
 }
 
 

@@ -34,12 +34,14 @@ import java.util.logging.LoggingMXBean;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Login screen - the user has the option to login in with an existing account or with Gmail
+ * - a register button is found on the login page in case the user does not have an account
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 0;
     private static final String TAG = "LOGIN_ACTIVITY";
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private TextInputEditText mEmail;
     private EditText mPassword;
     private SignInButton signInBtn;
@@ -53,18 +55,24 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
 
+        // get references to the email and pass fields
+        // also the sign in button
         mEmail = findViewById(R.id.emailLogin);
         mPassword = findViewById(R.id.passwordLogin);
         signInBtn = findViewById(R.id.sign_in_button);
 
+        // get the firebase authentication instance
         firebaseAuth = FirebaseAuth.getInstance();
 
+        // create the requests to sign in with Google Sign In
         createRequest();
 
+        // add a listener to the sign in button without Google Sign in
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                // sign in the user checking if the user is in the DB or not
                 signIn();
 
 
@@ -73,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    // callback function which gets the result from the Google Account Fragment
+    // if the result is the expected one then it will sign in the user
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -84,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+                // authenticate user
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -93,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // get credentials and sign is the user
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
@@ -115,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    // create the requests to the Google's servers to sign in with Gmail
     public void createRequest() {
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -127,12 +140,15 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    // start the Google Sign In fragment where the user
+    // chooses the account
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
         System.out.println("AM AFISAT");
     }
 
+    // if the user is already logged in with gmail then go to the main page
     @Override
     protected void onStart() {
         super.onStart();
@@ -143,11 +159,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void onLogin(View view) {
 
+    public void onLogin(View view) {
+        // get the data from the fields
         String mail = mEmail.getText().toString().trim();
         String password = mPassword.getText().toString().trim();
 
+        // check the data to have the appropriate formate and length
         if (TextUtils.isEmpty(mail)) {
 
             mEmail.setError("Email is required");
@@ -164,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // sign in the user
         firebaseAuth.signInWithEmailAndPassword(mail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -172,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
 
 //                    manageWallet();
-
+                    // redirect the user to the main page
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -184,20 +203,18 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-//        editor = sharedPreferences.edit();
-//        editor.putBoolean("logged", true);
-//        editor.apply();
 
     }
 
-    public void manageWallet()
-    {
+    // initialize an empty wallet when a new user is created
+    public void manageWallet() {
         Map<String, Object> amount = new HashMap<>();
         amount.put("amount", 0.0);
         db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").set(amount);
 
     }
 
+    // redirect the user to the register page when "register" text is pressed
     public void onRegister(View view) {
 
         Intent intent = new Intent(this, RegisterActivity.class);

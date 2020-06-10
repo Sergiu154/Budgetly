@@ -29,6 +29,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Edit tranasction activity
+ * The user can delete a transaction or update the following fields:
+ * 1. category type
+ * 2. date
+ * 3. amount
+ */
 public class EditTransaction extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
 
@@ -60,16 +67,19 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_transaction_layout);
+        // get references to the object from the view
         transactionPrice = findViewById(R.id.transaction_price);
         dateText = findViewById(R.id.transaction_date);
+        // save the type of categories found in SelectCategory activity
         income = new HashMap<>();
         String[] incomes = {"Award", "Interest Money", "Salary", "Gifts", "Selling", "Others"};
         for (String type : incomes)
             income.put(type, true);
 
+        // flag used to check if the transaction if possible or not
         this.hasMoney = true;
 
-
+        // get current amount of money found in the user's wallet
         db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -77,21 +87,30 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
                 if (task.isSuccessful()) {
 
                     DocumentSnapshot documentSnapshot = task.getResult();
+                    // set the total amount of the user
                     totalSum = (double) documentSnapshot.getData().get("amount");
                 }
 
             }
         });
+
+        // the the date of the transaction from the main page
+        // it has to be displayed in a edit page
         if (getIntent().getExtras().getString("transactionDate") != null) {
             transactionDate = getIntent().getExtras().getString("transactionDate");
             transactionID = getIntent().getExtras().getString("id");
         }
+        // check is the DB has already been queried
+        // used when an user switches between SelectCategory and EditCategory
         queried = getIntent().getExtras().getBoolean("isQueried");
 
+        // save the date
         monthCollection = transactionDate;
 
+        // the DB is queries the first time the user enters Edti Activity
 
         if (!queried) {
+            // get the date about the transaction and set the category and amount in the view
             DocumentReference docRef = db.document(firebaseAuth.getCurrentUser().getUid()).collection(transactionDate).document(transactionID);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -113,8 +132,9 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
                 }
             });
         }
-        if (queried) {
 
+        if (queried) {
+            // set the category,date and amount in the view when the user enters EditTransaction Activity
             setTransactionDate();
             setCategory(transaction.getCategory(), transaction.getCategoryPath());
             transactionPrice.setText(Double.toString(transaction.getAmount() < 0 ? -transaction.getAmount() : transaction.getAmount()));
@@ -123,7 +143,6 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
         }
 
         // write the initial date to the view
-
         String newString;
         int src;
         if (savedInstanceState == null) {
@@ -132,6 +151,7 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
                 newString = null;
                 src = 0;
             } else {
+                // get the image src from the SelectCategory activity
                 newString = extras.getString("image_name");
                 src = extras.getInt("image_url");
             }
@@ -139,8 +159,10 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
             newString = (String) savedInstanceState.getSerializable("image_name");
             src = savedInstanceState.getInt("image_url");
         }
+        // set the category name and image
         setCategory(newString, src);
 
+        // set the transaction date which is retrieved from the main page
         TextView textView = findViewById(R.id.edit_transaction_id);
         String transactionId = getIntent().getExtras().getString("transactionDate");
         textView.setText(transactionId);
@@ -148,6 +170,7 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
 
     }
 
+    // set the data to the view
     private void setCategory(String s, int src) {
         CategoryText = findViewById(R.id.transaction_select_category);
         categoryImage = findViewById(R.id.category_image);
@@ -158,8 +181,10 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
         imgSrc = src;
     }
 
+    // this function triggers the Datepicker and maps the numeric month to its corresponding name
     @SuppressLint("SetTextI18n")
     private void setTransactionDate() {
+        // used to get the name of the month from the calendar
         HashMap<String, String> months = new HashMap<>();
         String[] mnths = {"", "Jan", "Feb", "March", "April", "May", "June", "July", "August", "Sept", "Oct", "Nov", "Dec"};
         for (int i = 1; i <= 12; i++) {
@@ -171,9 +196,11 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
             }
         }
 
+        // set the date when somehting is selected from the DatePicker
         dateText.setText(months.get(transaction.getMonth()) + '-' + Integer.toString(transaction.getDay()) + '-' + transaction.getYear());
         findViewById(R.id.transaction_date).setOnClickListener(new View.OnClickListener() {
             @Override
+            // show DatePicker on field click
             public void onClick(View v) {
                 showDatePickerDialog();
             }
@@ -181,6 +208,7 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
     }
 
 
+    // show Google Calendar DatePicker
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
@@ -192,6 +220,8 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
         datePickerDialog.show();
     }
 
+    // when SelectCategory is pressed, signal the activity that
+    // the request comes from EdiTransaction
     public void onSelectCategory(View view) {
 
         Intent intent = new Intent(this, SelectCategoryActivity.class);
@@ -200,7 +230,9 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
 
     }
 
-
+    // whene data has been set , map the number of the month to its name
+    // split the date in day,month and year and save it to the class members
+    // for later use in updating the DB
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         HashMap<String, String> months = new HashMap<>();
@@ -213,6 +245,7 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
                 months.put(Integer.toString(i), mnths[i]);
             }
         }
+        // get day,month,year
         month = month + 1;
         String date = month + "-" + dayOfMonth + "-" + year;
         this.day = dayOfMonth;
@@ -220,6 +253,7 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
         this.year = String.valueOf(year);
         this.month = months.get(String.valueOf(month));
         monthCollection = month + "-" + year;
+        // set date in view
         dateText.setText(date);
     }
     /* end of date selection and display */
@@ -227,6 +261,7 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
     // delete the selected transaction
     public void onDeleteButton(View view) {
 
+        // delete the transaction from the DB
         DocumentReference docRef = db.document(firebaseAuth.getCurrentUser().getUid()).collection(transactionDate).document(transactionID);
         docRef.delete();
 
@@ -234,12 +269,13 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
         HashMap<String, Double> sum = new HashMap<>();
         sum.put("amount", totalSum - transaction.getAmount());
         db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").set(sum);
+        //redirect to main page
         startActivity(new Intent(EditTransaction.this, MainActivity.class));
 
 
     }
 
-    /* button for adding transaction */
+    /* button for saving the changes of a transaction*/
     public void onSaveButton(View v) {
 
         hasMoney = true;
@@ -249,29 +285,27 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
         final EditText transactionPrice = findViewById(R.id.transaction_price);
 
 
+        // check the field of the transaction
         if (dateText.getText().toString().matches("")) {
-//            Toast.makeText(AddTransactionActivity.this, transactionPrice.getText().toString(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(AddTransactionActivity.this, transactionNotes.getText().toString(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(EditTransaction.this, monthCollection, Toast.LENGTH_SHORT).show();
-
             return;
         }
 
         if (transactionPrice.getText().toString().matches("")) {
-            Toast.makeText(EditTransaction.this, monthCollection, Toast.LENGTH_SHORT).show();
             Toast.makeText(EditTransaction.this, "Insert a price!", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // delete the unnecessary data
         DocumentReference docRef = db.document(firebaseAuth.getCurrentUser().getUid()).collection(transactionDate).document(transactionID);
         docRef.delete();
 
-        // update totalsum
+        // update the totalsum in the DB
         HashMap<String, Double> sum = new HashMap<>();
         sum.put("amount", totalSum - transaction.getAmount());
         db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").set(sum);
 
-
+        // in case the transaction was moved to another month
+        // we need to insert this transaction to the documents where it belongs
         db.document(firebaseAuth.getCurrentUser().getUid()).collection("Wallet").document("MainWallet").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -285,12 +319,15 @@ public class EditTransaction extends AppCompatActivity implements DatePickerDial
 
                     totalSum = (double) documentSnapshot.getData().get("amount");
 
+                    // if the transaction is not possible
+                    // i.e the user does not have enough money
+                    // then show a little message
                     if (totalSum - Double.parseDouble(transactionPrice.getText().toString()) < 0 && !isPosivite) {
                         Toast.makeText(EditTransaction.this, "You are a little poor human", Toast.LENGTH_SHORT).show();
 
                     } else {
 
-
+                        // otherweise save the new transaction to the DB
                         DocumentReference ref = db
                                 .document(firebaseAuth.getCurrentUser().getUid()).collection(monthCollection).document();
 
