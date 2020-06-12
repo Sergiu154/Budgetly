@@ -177,6 +177,9 @@ public class PieDataFragment extends Fragment {
         }
         // set the label for the plot
         BarDataSet set = new BarDataSet(bar_entries, "BarDataSet");
+        set.setValueTextColor(Color.rgb(230, 230, 230));
+        set.setValueTextSize(20f);
+
         BarData bar_data = new BarData(set);
 
         // set the data and the colours to the chart
@@ -188,6 +191,13 @@ public class PieDataFragment extends Fragment {
         liniileMen.getDescription().setEnabled(false);
         liniileMen.getLegend().setEnabled(false);
         liniileMen.setTouchEnabled(false);
+        liniileMen.setDrawValueAboveBar(false);
+        liniileMen.setFitBars(true);
+        liniileMen.getXAxis().setDrawGridLines(false);
+        liniileMen.getXAxis().setDrawAxisLine(false);
+        liniileMen.getXAxis().setDrawLabels(false);
+
+
 
         liniileMen.invalidate();
     }
