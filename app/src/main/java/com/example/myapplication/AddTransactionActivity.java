@@ -24,7 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -151,10 +154,20 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
                 months.put(Integer.toString(i), mnths[i]);
             }
         }
+
+        SimpleDateFormat inFormat = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date myDate = inFormat.parse(year + "-" + month + "-" + year);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
+            this.stringDay = simpleDateFormat.format(myDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         month = month + 1;
         String date = month + "-" + dayOfMonth + "-" + year;
         this.day = dayOfMonth;
-        this.stringDay = String.valueOf(dayOfMonth);
+//        this.stringDay = String.valueOf(dayOfMonth);
         this.year = String.valueOf(year);
         this.month = months.get(String.valueOf(month));
         monthCollection = month + "-" + year;
