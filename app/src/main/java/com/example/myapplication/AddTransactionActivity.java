@@ -157,7 +157,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
 
         SimpleDateFormat inFormat = new SimpleDateFormat("dd-MM-yyyy");
         try {
-            Date myDate = inFormat.parse(year + "-" + month + "-" + year);
+            Date myDate = inFormat.parse(dayOfMonth + "-" + month + "-" + year);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
             this.stringDay = simpleDateFormat.format(myDate);
         } catch (ParseException e) {
