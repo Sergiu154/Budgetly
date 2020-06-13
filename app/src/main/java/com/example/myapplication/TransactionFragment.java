@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -146,6 +147,8 @@ public class TransactionFragment extends Fragment {
 
     }
 
+    // show the pieChart report of the selected month's transactions
+
     /**
      * Each time a fragment is destroyed and recreated onCreateView method is called
      * As usual, retrieve the data from the DB and update the interface
@@ -162,6 +165,16 @@ public class TransactionFragment extends Fragment {
         final TextView inflow = view.findViewById(R.id.inflow_id);
         final TextView outflow = view.findViewById(R.id.outflow_id);
         final TextView finalSum = view.findViewById(R.id.finalSum);
+        final Button monthlyReport = view.findViewById(R.id.month_report);
+        monthlyReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MainActivity m = (MainActivity) getActivity();
+                m.setReport();
+
+            }
+        });
 
 
         // here we will get the transactions of the current month

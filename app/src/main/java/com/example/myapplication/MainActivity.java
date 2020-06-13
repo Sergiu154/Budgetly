@@ -40,6 +40,7 @@ import java.util.logging.SimpleFormatter;
  */
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
+    private int lastTab;
 
     @Override
     protected void onResume() {
@@ -61,8 +62,17 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
         // by default, the main transaction fragment will be loaded when the app is opened
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, MainTransactionFragment.newInstance(false)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, MainTransactionFragment.newInstance(false, lastTab)).commit();
 
+
+    }
+
+    public void passData(int numTab) {
+        this.lastTab = numTab;
+    }
+
+    public void setReport(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, MainTransactionFragment.newInstance(true, lastTab)).commit();
 
     }
 
@@ -71,18 +81,20 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
                     Fragment selectedFragment = null;
                     switch (item.getItemId()) {
 
                         // get the user to the transaction history
                         case R.id.transaction_nav:
-                            selectedFragment = MainTransactionFragment.newInstance(false);
+                            selectedFragment = MainTransactionFragment.newInstance(false, lastTab);
                             break;
                         // the piehcart and barchart report
                         case R.id.report_nav:
-                            selectedFragment = MainTransactionFragment.newInstance(true);
+                            selectedFragment = MainTransactionFragment.newInstance(true, lastTab);
                             break;
                         // account page
                         case R.id.account_nav:

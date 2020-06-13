@@ -40,10 +40,12 @@ import androidx.viewpager.widget.ViewPager;
  */
 public class MainTransactionFragment extends Fragment {
 
+    private static final String ARG_PAGE = "ARG_PAGE";
     ViewPager viewPager;
     TabLayout tabLayout;
     View view;
     TextView totalAmount;
+    private int tabPosition;
     private Boolean isChart;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private CollectionReference db = FirebaseFirestore.getInstance().collection("users");
@@ -53,11 +55,12 @@ public class MainTransactionFragment extends Fragment {
     }
 
     // use to save and retrieve some data when
-    public static MainTransactionFragment newInstance(Boolean isChart) {
+    public static MainTransactionFragment newInstance(Boolean isChart, int lastTab) {
 
         Bundle args = new Bundle();
         MainTransactionFragment fragment = null;
         args.putBoolean("isChart", isChart);
+        args.putInt("lastTab", lastTab);
         fragment = new MainTransactionFragment();
         fragment.setArguments(args);
         return fragment;
@@ -129,12 +132,38 @@ public class MainTransactionFragment extends Fragment {
         }
         Bundle bundle = getArguments();
         Boolean isChart = bundle.getBoolean("isChart");
+        int page = bundle.getInt(ARG_PAGE);
 
         // set the adapter for the viewPager
         viewPager.setAdapter(new TransactionFragmentAdapter(getChildFragmentManager(), getContext(), tabTitles, isChart));
 
+
         // get the tabLayout and bind it with the viewPager
         tabLayout.setupWithViewPager(viewPager);
+//        tabPosition = tabLayout.getSelectedTabPosition();
+        tabLayout.getTabAt(getArguments().getInt("tabPosition")).select();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tabPosition = tab.getPosition();
+                getArguments().putInt("tabPosition", tabPosition);
+                MainActivity m = (MainActivity) getActivity();
+                m.passData(tabPosition);
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        viewPager.setCurrentItem(getArguments().getInt("lastTab"));
+
 
     }
 
